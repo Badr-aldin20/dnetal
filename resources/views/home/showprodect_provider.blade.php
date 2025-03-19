@@ -21,7 +21,7 @@
                             : ($i->status == 'Wait' ? 'rgba(255, 255, 0, 0.411)'
                                 : 'rgba(255, 0, 0, 0.384)') }}">
                         <td class="py-1">
-                            <img src="{{ asset("image_pro/".$i->image) }}" />
+                            <img src="{{ asset($i->image) }}" />
                         </td>
                         <td>{{ $i->name }}</td>
                         <td>{{ $i->modeType }}</td>

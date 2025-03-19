@@ -27,7 +27,7 @@
            
                     <tr>
                         <td class="py-1">
-                            <img src="{{asset('image_pro/'.$i->image)}}" />
+                            <img src="{{asset($i->image)}}" />
                         </td>
                         <td>{{$i->name}}</td>
                         <td>{{$i->modeType}}</td>
@@ -35,11 +35,19 @@
                         <td>{{$i->price_sales}}</td>
                         <td>{{$i->counter}}</td>
                         <td>                             
-                           <form id="deleteForm" action="{{route('forcedelete_pro',$i->id)}}" method="get">
+                           {{-- <form id="deleteForm" action="{{route('forcedelete_pro',$i->id)}}" method="get">
                                 @csrf
-                        {{-- @method('delete') --}}
+                        @method('delete')
                                 <button type="button" onclick="confirmDelete()" class="btn btn-primary mr-2">حذف</button>
-                            </form>  
+                            </form>   --}}
+
+                            <form style="display:inline" action=
+                            "{{route('forcedelete_pro',$i->id)}}"
+                             method="get">
+                             
+                            @csrf
+                            <button type="submit" class="btn btn-primary mr-2">حذف بشكل نهائي</button>
+                            </form>
                         </td>             
                         <td> <a href="{{route('restor_pro',$i->id)}}" class="btn btn-warning">استعاده</a></td>
 

@@ -34,13 +34,13 @@ class ProductsController extends Controller
            "counter"=>"required|numeric|min:0",
         ]);
         $imge = $request->file('image')->getClientOriginalName();
-        $phate = $request->file('image')->storeAs('users', $imge, 'image_pro');
-       // $img_path = $request->file('image')->store('', 'image_pro');
+        $phate = $request->file('image')->storeAs('', $imge, 'Images_Product');
+      // $img_path = $request->file('image')->store('', 'Images_Product');
 
        products::create([
        "name" =>$request->name,
-      // "image" =>'ImagesProduct' . '/' . $img_path,
-       "image" =>$phate,
+       "image" =>'ImagesProduct' . '/' . $phate,
+      //  "image" =>$phate,
        "modeType"=>$request->modeType,
        "description"=>$request->description,
        "price_buy"=>$request->price_buy,

@@ -29,7 +29,7 @@
                 @foreach ($data as $i)
                     <tr>
                         <td class="py-1">
-                            <img src="{{ asset('image_pro/'.$i->image) }}" />
+                            <img src="{{ asset($i->image) }}" />
                         </td>
                         <td>{{ $i->name }}</td>
                         <td>{{ $i->modeType }}</td>

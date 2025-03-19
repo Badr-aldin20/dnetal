@@ -13,7 +13,7 @@ class DeliveryReportsController extends Controller
 {
     public function Report_index_delivery(){
      
-        $delivery=delaveries::where("Manager_Id",Auth()->user()->id)->get();
+        $delivery=delaveries::where("Manger_Id",Auth()->user()->id)->get();
         $data=DB::select("
         SELECT 
         delaveries.name as deliver_name,
@@ -40,7 +40,7 @@ class DeliveryReportsController extends Controller
 
     public function search_Report_delivery(Request $request){
 
-        $delivery=delaveries::where("Manager_Id",Auth()->user()->id)->get();
+        $delivery=delaveries::where("Manger_Id",Auth()->user()->id)->get();
         $data=DB::select("
         SELECT 
         delaveries.name as deliver_name,

@@ -17,7 +17,7 @@ return new class extends Migration
             $table->foreignId('Clinic_Id')->constrained("users");
             $table->foreignId('bill_id')->constrained("bills");
             $table->integer('code')->default(random_int(0,9999));
-            $table->enum('status',["Success","failure","underway"])->default("underway");
+            $table->enum('status',["Success","failure","Underway"])->default("Underway");
             $table->timestamps();
         });
     }

@@ -41,7 +41,7 @@
                         <img src="{{ asset('image_pro/'.$i->image) }}" />
                     </td>
                     <td>{{ $i->name}}</td>
-                    <td>{{ $i->couner }}</td>
+                    <td>{{ $i->counter }}</td>
                     <td>{{ $i->price_sales }}</td>
                     <td>{{ $i->price_buy }}</td>
                     <td>{{ $i->Balance }}</td>

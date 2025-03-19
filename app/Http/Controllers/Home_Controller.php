@@ -69,7 +69,7 @@ class Home_Controller extends Controller
           //  "password"=>"required|min:8"
         ]);
         $imge = $request->file('image')->getClientOriginalName();
-        $phate = $request->file('image')->storeAs('users', $imge, 'image_user');
+        $phate = $request->file('image')->storeAs('', $imge, 'Images');
         User::where("id",$id)->update([
             "name" =>$request->name,
             "email" =>$request->email,
@@ -78,7 +78,7 @@ class Home_Controller extends Controller
             "password" =>Hash::make($request->password),
             "name_company" =>$request->name_company,
             "phone" =>$request->phone,
-            "image" => $phate,
+            "image" => 'ImagesProfile/' . $phate,
   
         ]);
 

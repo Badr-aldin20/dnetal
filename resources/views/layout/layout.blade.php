@@ -35,7 +35,7 @@
         <nav class="navbar default-layout-navbar col-lg-12 col-12 p-0 fixed-top d-flex flex-row">
         
             <div class="text-center navbar-brand-wrapper d-flex align-items-center justify-content-center">
-                <a class="navbar-brand brand-logo" href="/"><img src="{{asset('assets/image_user/users/download (2).jpg')}}"
+                <a class="navbar-brand brand-logo" href="/"><img src="{{ asset('assets/images/logo.png')  }}"
                         alt="logo" /></a>
                 <a class="navbar-brand brand-logo-mini" href="/"><img src="{{ asset('assets/images/logo-mini.png') }}"
                         alt="logo" /></a>
@@ -57,7 +57,7 @@
                         <a class="nav-link dropdown-toggle" id="profileDropdown" href="#" data-toggle="dropdown"
                             aria-expanded="false">
                             <div class="nav-profile-img">
-                                <img src="{{asset('image_user/'.Auth()->user()->image)}}" alt="image">
+                                <img src="{{asset(Auth()->user()->image)}}" alt="image">
                             </div>
                             <div class="nav-profile-text">
                                 <p class="mb-1 text-black">{{Auth()->user()->name}}</p>
@@ -66,7 +66,7 @@
                         <div class="dropdown-menu navbar-dropdown dropdown-menu-right p-0 border-0 font-size-sm"
                             aria-labelledby="profileDropdown" data-x-placement="bottom-end">
                             <div class="p-3 text-center bg-primary">
-                                <img class="img-avatar img-avatar48 img-avatar-thumb" src="{{asset('image_user/'.Auth()->user()->image)}}"
+                                <img class="img-avatar img-avatar48 img-avatar-thumb" src="{{asset(Auth()->user()->image)}}"
                                     alt="">
                             </div>
                             <div class="p-2">

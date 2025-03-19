@@ -11,7 +11,7 @@ class DelaveriesController extends Controller
 {
     public function index_delivery(){
 
-        $data=delaveries::where("Manager_Id",Auth()->user()->id)->get();
+        $data=delaveries::where("Manger_Id",Auth()->user()->id)->get();
         return view("Admin_Provider.dalevry.index_dalevry",["data"=>$data]);
     }
 
@@ -32,7 +32,7 @@ class DelaveriesController extends Controller
             "name"=>$request->name,
             "email"=>$request->email,
             "password"=>$request->password,
-            "Manager_Id"=>Auth()->user()->id,
+            "Manger_Id"=>Auth()->user()->id,
             "Status"=>"offline"
         ]);
         session()->flash("success","تم اضافه موصل بنجاح");
@@ -87,14 +87,14 @@ class DelaveriesController extends Controller
              products.name,
              products.image,
              sales.id,
-             sales.couner,
+             sales.counter,
              sales.Order,
-             sales.Status_order,
+             sales.StatusOrder,
              sales.created_at,
              products.price_sales,
              products.price_buy,
              delaveries.name as 'delivaryName',
-             ((products.price_sales - products.price_buy) * sales.couner) as Balance
+             ((products.price_sales - products.price_buy) * sales.counter) as Balance
          
          FROM 
              sales
@@ -111,7 +111,7 @@ class DelaveriesController extends Controller
      ", [Auth()->user()->id]);
  
          $deliveries = delaveries::where("status", "Online")
-             ->where("Manager_Id", Auth()->user()->id)
+             ->where("Manger_Id", Auth()->user()->id)
              ->get();
 
         return view("Admin_Provider.dalevry.index_order_delivery",[

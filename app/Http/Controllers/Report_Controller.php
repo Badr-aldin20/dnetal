@@ -17,10 +17,10 @@ class Report_Controller extends Controller
         products.name,
         products.price_buy,
         products.price_sales,
-        sales.couner,
+        sales.counter,
         sales.total_price,
         sales.created_at,
-        ((products.price_buy - products.price_sales)*sales.couner) as Balance
+        ((products.price_buy - products.price_sales)*sales.counter) as Balance
          FROM sales INNER JOIN products on sales.product_Id=products.id and products.Manger_Id=? 
          Order BY sales.id DESC
         ", [Auth()->user()->id]);
@@ -48,10 +48,10 @@ class Report_Controller extends Controller
         products.name,
         products.price_buy,
         products.price_sales,
-        sales.couner,
+        sales.counter,
         sales.total_price,
         sales.created_at,
-        ((products.price_buy - products.price_sales)*sales.couner) as Balance
+        ((products.price_buy - products.price_sales)*sales.counter) as Balance
            FROM sales
         INNER JOIN products
         ON sales.product_Id = products.id

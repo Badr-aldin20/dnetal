@@ -14,6 +14,7 @@ return new class extends Migration
         Schema::create('balances', function (Blueprint $table) {
             $table->id();
             $table->string("name_clinic");
+            $table->boolean("active")->default(false);
             $table->decimal("totel_balance");
             $table->text("description");
             $table->foreignId("clinic_id")->constrained("users");

@@ -35,7 +35,27 @@ return [
             'root' => storage_path('app'),
             'throw' => false,
         ],
-
+        'Images' => [
+            'driver' => 'local',
+            'root' => public_path('ImagesProfile'),
+            'url' => env('APP_URL') . '/storage',
+            'visibility' => 'public',
+            'throw' => false,
+        ],
+        'Images_Hero' => [
+            'driver' => 'local',
+            'root' => public_path('ImagesHero'),
+            'url' => env('APP_URL') . '/storage',
+            'visibility' => 'public',
+            'throw' => false,
+        ],
+        'Images_Product' => [
+            'driver' => 'local',
+            'root' => public_path('ImagesProduct'),
+            'url' => env('APP_URL') . '/storage',
+            'visibility' => 'public',
+            'throw' => false,
+        ],
         'image_pro' => [
         'driver' => 'local',
         'root' => public_path('image_pro'),
@@ -43,20 +63,20 @@ return [
         'visibility' => 'public',
         'throw' => false,
     ],
-    'Images' => [
-        'driver' => 'local',
-        'root' => public_path('ImagesProfile'),
-        'url' => env('APP_URL') . '/storage',
-        'visibility' => 'public',
-        'throw' => false,
-    ],
-    'image_user' => [
-        'driver' => 'local',
-        'root' => public_path('image_user'),
-        'url' => env('APP_URL').'/storage',
-        'visibility' => 'public',
-        'throw' => false,
-    ],
+    // 'Images' => [
+    //     'driver' => 'local',
+    //     'root' => public_path('ImagesProfile'),
+    //     'url' => env('APP_URL') . '/storage',
+    //     'visibility' => 'public',
+    //     'throw' => false,
+    // ],
+    // 'image_user' => [
+    //     'driver' => 'local',
+    //     'root' => public_path('image_user'),
+    //     'url' => env('APP_URL').'/storage',
+    //     'visibility' => 'public',
+    //     'throw' => false,
+    // ],
 
         'public' => [
             'driver' => 'local',

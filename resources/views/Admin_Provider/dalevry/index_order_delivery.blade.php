@@ -58,17 +58,17 @@
             </thead>
             <tbody>
                 @foreach ($data as $i)
-                    <tr @if ($i->Status_order == 'A') onclick="ShowHiddenDiv({{ $i->id }} )" @endif
-                        style="background-color: {{ $i->Status_order == 'A' ? '#ffff96' : ($i->Status_order == 'B' ? '#ffd483' : '#96dc96') }};">
+                    <tr @if ($i->StatusOrder == 'A') onclick="ShowHiddenDiv({{ $i->id }} )" @endif
+                        style="background-color: {{ $i->StatusOrder == 'A' ? '#ffff96' : ($i->StatusOrder == 'B' ? '#ffd483' : '#96dc96') }};">
                         <td class="py-1">
                             <img src="{{ asset($i->image) }}" />
                         </td>
                         <td>{{ $i->name }}</td>
-                        <td>{{ $i->couner }}</td>
+                        <td>{{ $i->counter }}</td>
                         <td>{{ $i->delivaryName }}</td>
 
                         <td>
-                            @switch($i->Status_order)
+                            @switch($i->StatusOrder)
                                 @case('A')
                                     Need Delivery
                                 @case('B')

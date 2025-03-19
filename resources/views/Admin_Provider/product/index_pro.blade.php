@@ -78,7 +78,7 @@
            
                     <tr>
                         <td class="py-1">
-                            <img src="{{asset('image_pro/'.$i->image)}}" />
+                            <img src="{{ asset($i->image) }}" />
                         </td>
                         <td>{{$i->name}}</td>
                         <td>{{$i->modeType}}</td>
@@ -88,11 +88,17 @@
 
                         <td>
                               
-                            <form id="deleteForm" action="{{route('delete_pro',$i->id)}}" method="POST">
+                            {{-- <form id="deleteForm" action="{{route('delete_pro',$i->id)}}" method="POST">
                                 @csrf
                                 @method('delete')
                                 
                                 <button type="button" onclick="confirmDelete()" class="btn btn-primary mr-2">حذف</button>
+                            </form>   --}}
+
+                            <form id="deleteForm" action="{{route('delete_pro',$i->id)}}" method="POST">
+                                @csrf
+                                @method('delete')
+                                <button type="button"onclick="confirmDelete(this)" class="btn btn-primary mr-2">حذف</button>
                             </form>  
                         </td>             
                         <td> <a href="{{route('edit_pro',$i->id)}}" class="btn btn-warning">update</a></td>
@@ -106,7 +112,7 @@
         </table>
     </div>
 
-    <script>
+    {{-- <script>
     
 
         function confirmDelete() {
@@ -122,6 +128,28 @@
             }).then((result) => {
                 if (result.isConfirmed) {
                     document.getElementById("deleteForm").submit();
+                }
+            });
+        }
+    </script> --}}
+
+
+    <script>
+    
+
+        function confirmDelete(button) {
+            Swal.fire({
+                title: "هل أنت متأكد؟",
+                text: "لن تتمكن من استعادة هذا العنصر!",
+                icon: "warning",
+                showCancelButton: true,
+                confirmButtonColor: "#d33",
+                cancelButtonColor: "#3085d6",
+                confirmButtonText: "نعم، احذف!",
+                cancelButtonText: "إلغاء"
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    button.closest("form").submit(); // ارسال النموذج الصحيح المرتبط بالزر
                 }
             });
         }
