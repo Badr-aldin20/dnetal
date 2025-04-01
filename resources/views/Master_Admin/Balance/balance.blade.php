@@ -1,9 +1,7 @@
 @extends('layout/Layout')
-
 @section('search')
-    <form class="d-flex align-items-center h-100" action="
-    {{-- {{ route('search') }} --}}
-     " method="post">
+    <form class="d-flex align-items-center h-100" action="{{route('search_balance') }}"
+     method="post">
 
         @csrf
         <div class="input-group">
@@ -16,91 +14,119 @@
 @endsection
 @section('content')
     <div class="card-body">
-        <h4 class="card-title">All  Product Wite </h4>
-        @if (session()->has('success'))
-            <div class="alert alert-success" id="alert">
-                {{ session('success') }}
-            </div>
+        <h4 class="card-title">All Products Table</h4>
+        <a href="{{route("create_balance")}}" id="btn-Add" class="btn btn-inverse-success btn-fw">
+            Add New heroe
+        </a>
+
+
+
+        @if (session()->has('edit'))
+        <div class="alert alert-success" id="alert">
+            {{ session('edit') }}
+        </div>
+        <script>
+            setTimeout(() => {
+                document.getElementById("alert").style.display = "none";
+            }, [2000]);
+        </script>
+    @endif
+        @if (session()->has('error'))
+            <div class="alert alert-danger" id="alert">
+                {{ session('error') }}
+            </div> 
             <script>
                 setTimeout(() => {
                     document.getElementById("alert").style.display = "none";
                 }, [2000]);
             </script>
-       
+         @endif
+
+
+
+
+        @if (session()->has('success'))
+        <div class="alert alert-success" id="alert">
+            {{ session('success') }}
+        </div>
+        <script>
+            setTimeout(() => {
+                document.getElementById("alert").style.display = "none";
+            }, [2000]);
+        </script>
     @endif
-        <table class="table table-striped ">
+
+        <table class="table table-striped">
             <thead>
                 <tr>
-                    <th> Image </th>
+                    
+                    <th> # </th>
                     <th> name </th>
-                    <th> type </th>
-                    <th> price Sell </th>
-                    <th> price Buy </th>
-                    <th colspan="2"> Event </th>
+                    <th> status </th>
+                    <th> totel_balance </th>
+                    <th> description </th>
+                    <th> deta </th>
+
+
                 </tr>
             </thead>
+            @foreach($data as $i)
+                
+          
             <tbody>
-                @foreach ($data as $i)
-                <tr>
-                    <td class="py-1">
-                        <img src="{{asset('image_pro/'.$i->image)}}" />
-                    </td>
-                    <td>{{ $i->id }}</td>
-                    <td>{{ $i->name }}</td>
-                    <td>{{ $i->total_balance }}</td>
-                    <td>{{ $i->description }}</td>
-                    <td>{{ \Carbon\Carbon::parse($i->created_at)->format('Y-m-d') }}</td>
+           
+                    <tr>
+                        <td>{{$i->id_bala	}}</td>
+                        <td>{{$i->name_clin	}}</td>
+                        <td>{{$i->status}}</td>
+                        <td>{{$i->totel_balance}}</td>
+                        <td>{{$i->description}}</td>
+                        <td>{{$i->deta	}}</td>
 
-                    <td>
-                            <form action="
-                            {{-- {{ route('requset_product_wait_active', [$i->id]) }} --}}
-                             " method="post">
-                                @method('put')
-                                @csrf
-                                <button type="submit" class="btn btn-info btn-rounded ">Acceptable</button>
-                            </form>
-                        </td>
+
                         <td>
-                            <form id="deleteForm" action="
-                            {{-- {{route('requset_product_wait_unactive',[$i->id])}} --}}
-                            " method="post">
-                                @method('PUT')
+                            {{-- <form id="deleteForm" action="
+                            {{route('del_categories',$i->id)}}
+                            " method="POST">
                                 @csrf
-                                <button type="button" onclick="confirmDelete()" class="btn btn-danger btn-rounded ">Unacceptable</button>
-                            </form>
-               
-                        </td>
-                        
+                                @method('delete')
+                                <button type="button"onclick="confirmDelete(this)" class="btn btn-primary mr-2">حذف</button>
+                            </form>   --}}
+                        </td>             
+                        <td>
+                            @if ($i->status == "failure")
+                            <a href="{{route('edit_balance',$i->id_bala)}}" class="btn btn-warning">عمليه مرفوضه</a>
+                            @elseif ($i->status == "Success")
+                            <a href="{{route('edit_balance',$i->id_bala)}}" class="btn btn-primary"> update</a>
+                            @endif
 
                     </tr>
-                @endforeach
+              
 
 
             </tbody>
+            @endforeach
         </table>
     </div>
 
-    
     <script>
     
 
-        function confirmDelete() {
+        function confirmDelete(button) {
             Swal.fire({
                 title: "هل أنت متأكد؟",
-                text: "لن تتمكن من الموافقه على هذا العنصر!",
+                text: "لن تتمكن من استعادة هذا العنصر!",
                 icon: "warning",
                 showCancelButton: true,
                 confirmButtonColor: "#d33",
                 cancelButtonColor: "#3085d6",
-                confirmButtonText: "نعم، ارفض!",
+                confirmButtonText: "نعم، احذف!",
                 cancelButtonText: "إلغاء"
             }).then((result) => {
                 if (result.isConfirmed) {
-                    document.getElementById("deleteForm").submit();
+                    button.closest("form").submit(); // ارسال النموذج الصحيح المرتبط بالزر
                 }
             });
         }
     </script>
 @endsection
-
-        

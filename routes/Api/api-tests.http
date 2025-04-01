@@ -1,0 +1,13 @@
+GET http://192.168.41.3:8000/api/Get-All-Clinic
+Accept: application/json
+
+
+
+
+# POST http://192.168.41.3:8000/api/LoginDelivery
+# Content-Type: application/json
+
+# {
+#    "email":"badrhash123@gmail.com",
+#   "password":"12345678"
+# }

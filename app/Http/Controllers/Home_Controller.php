@@ -45,17 +45,7 @@ class Home_Controller extends Controller
      $user=User::where("id",$id)->first();
     if(!$user){
         session()->flash("error","لا يمكن تعديل هذا المستخدم");
-        return to_route("profile");
-
-        // if ($request->image != null) {
-        //     $img_path = $request->file('image')->store('', 'Images');
-        //     $user->update(["image" => 'ImagesProfile/' . $img_path]);
-        //     return to_route("/");
-        // }
-
-              
-  
-        
+        return to_route("/");
     }
     
     if($request->image ){
@@ -75,7 +65,7 @@ class Home_Controller extends Controller
             "email" =>$request->email,
             "phone" =>$request->phone,
             "Location" =>$request->Location,
-            "password" =>Hash::make($request->password),
+          //  "password" =>Hash::make($request->password),
             "name_company" =>$request->name_company,
             "phone" =>$request->phone,
             "image" => 'ImagesProfile/' . $phate,
@@ -103,7 +93,7 @@ class Home_Controller extends Controller
             "name" =>$request->name,
             "email" =>$request->email,
             "phone" =>$request->phone,
-            "password" =>Hash::make($request->password),
+          //  "password" =>Hash::make($request->password),
             "Location" =>$request->Location,
             "name_company" =>$request->name_company,
             "phone" =>$request->phone,
@@ -111,15 +101,46 @@ class Home_Controller extends Controller
           ]);
           
           return to_route("profile");
+
+      }
+    
     }
 
+   public function edit_password(){
+ 
+    $user=User::where("id",Auth()->user()->id)->first();
+    return view("home.edit_password");
 
+   }
+ 
+    public function update_password(Request $request){
+     $request->validate([
+        "password"=>'required|min:8',
+        "password_new"=>'required|min:8',
+        "password_new2"=>'required|min:8',
+     ]);
 
+     $user=User::where("id",Auth()->user()->id)->where("type","!=","Clinic")->first();
 
+     if(!Hash::check($request->password,$user->password)){
+      
+       session()->flash("error","كلمه السر القديمه غير صحيحه");
+       return to_route("edit_password");
         
-    }
+     }
+      
+     if($request->password_new != $request->password_new2){
+      session()->flash("error","كلمه السر غير متطابقتان");
+       return to_route("edit_password");
+     }
 
-
+     $pass=Hash::make($request->password_new);
+      $user->update([
+        "password"=>$pass
+      ]);
+      session()->flash("success","تم تعديل كلمه المرور بنجاح");
+       return to_route("profile");
+ }
 
     // public function update_profile(Request $request){
     //     $user=User::where("id",Auth()->user()->id)->first();

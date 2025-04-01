@@ -15,7 +15,7 @@ return new class extends Migration
             $table->id();
             $table->string('name');
             $table->string('image');
-            $table->enum('modeType',['اخرى','ادوات جرحيه تستخدم لمره واحده','مستلزمات','معدات كبيره'])->default('مستلزمات');
+            $table->string('modeType');
             $table->text('description');
             $table->decimal('price_buy');
             $table->decimal('price_sales');

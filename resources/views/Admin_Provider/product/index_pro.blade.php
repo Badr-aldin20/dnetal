@@ -24,20 +24,6 @@
             }, [2000]);
         </script>
     @endif
-        @if (session()->has('error'))
-            <div class="alert alert-danger" id="alert">
-                {{ session('error') }}
-            </div> 
-            <script>
-                setTimeout(() => {
-                    document.getElementById("alert").style.display = "none";
-                }, [2000]);
-            </script>
-         @endif
-
-
-
-
         @if (session()->has('success'))
         <div class="alert alert-success" id="alert">
             {{ session('success') }}
@@ -63,6 +49,7 @@
                 <tr>
                     <th> Image </th>
                     <th> name </th>
+                    <th> اسم الصنف </th>
                     <th> type </th>
                     <th> price Sell </th>
                     <th> price Buy </th>
@@ -81,6 +68,7 @@
                             <img src="{{ asset($i->image) }}" />
                         </td>
                         <td>{{$i->name}}</td>
+                        <td>{{$i->name_categories}}</td>
                         <td>{{$i->modeType}}</td>
                         <td>{{$i->price_buy}}</td>
                         <td>{{$i->price_sales}}</td>
@@ -95,13 +83,13 @@
                                 <button type="button" onclick="confirmDelete()" class="btn btn-primary mr-2">حذف</button>
                             </form>   --}}
 
-                            <form id="deleteForm" action="{{route('delete_pro',$i->id)}}" method="POST">
+                            <form id="deleteForm" action="{{route('delete_pro',$i->id_products)}}" method="POST">
                                 @csrf
                                 @method('delete')
                                 <button type="button"onclick="confirmDelete(this)" class="btn btn-primary mr-2">حذف</button>
                             </form>  
                         </td>             
-                        <td> <a href="{{route('edit_pro',$i->id)}}" class="btn btn-warning">update</a></td>
+                        <td> <a href="{{route('edit_pro',$i->id_products)}}" class="btn btn-warning">update</a></td>
 
                     </tr>
               

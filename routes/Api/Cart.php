@@ -131,7 +131,8 @@ Route::post("/Add-To-Card", function (Request $request) {
 
     Carts::create([
         'user_Id' => $user->id,
-        'product_Id' => $product->id
+        'product_Id' => $product->id,
+
     ]);
     return response()->json([
         "status" => "200",

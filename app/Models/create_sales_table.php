@@ -8,4 +8,5 @@ use Illuminate\Database\Eloquent\Model;
 class create_sales_table extends Model
 {
     use HasFactory;
+    
 }

@@ -2,7 +2,10 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Bills;
 use App\Models\delaveries;
+use App\Models\delivery_reports;
+use App\Models\sales;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
@@ -109,15 +112,46 @@ class DelaveriesController extends Controller
              sales.id DESC;
  
      ", [Auth()->user()->id]);
+
+    //  delaveries::where("status","Online")->where("",Auth()->user()->id)->get();
  
          $deliveries = delaveries::where("status", "Online")
              ->where("Manger_Id", Auth()->user()->id)
              ->get();
+            // dd($deliveries);
 
         return view("Admin_Provider.dalevry.index_order_delivery",[
                 "data" => $data,
                 "deliveries" => $deliveries,
             ]);
+      }
+
+
+      public function edit_order_delivery(Request $request)
+      {
+  
+          $salles = sales::where("id", $request->id_Sales)->first();
+          $salles->update([
+              "StatusOrder" => "B",
+              "deliver_id" => $request->id_delivery,
+          ]);;
+         
+          delaveries::where("id", $request->id_delivery)->update([
+              "status" => "Busy"
+          ]);
+          // get id Clinic for Bill
+          $bill = Bills::where("id", $salles->Bill_Id)->first();
+  
+          // set data in table  Delivery report
+          delivery_reports::create([
+              "Delivery_Id" => $request->id_delivery,
+              "Clinic_Id" => $bill->Clinic_Id,
+              "status" => "Underway",
+              "bill_id" => $bill->id,
+          ]);
+  
+          session()->flash("success", "تم التعديل بنجاح");
+          return to_route("index_order_delivery");
       }
 
 }

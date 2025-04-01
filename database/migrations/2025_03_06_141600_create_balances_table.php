@@ -13,11 +13,10 @@ return new class extends Migration
     {
         Schema::create('balances', function (Blueprint $table) {
             $table->id();
-            $table->string("name_clinic");
-            $table->boolean("active")->default(false);
+            $table->foreignId("clinic_id")->constrained("users");
+            $table->enum('status',["Success","failure","Underway"])->default("Underway");
             $table->decimal("totel_balance");
             $table->text("description");
-            $table->foreignId("clinic_id")->constrained("users");
             $table->timestamps();
         });
     }

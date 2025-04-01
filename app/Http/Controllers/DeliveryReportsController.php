@@ -27,7 +27,9 @@ class DeliveryReportsController extends Controller
      
      WHERE delivery_reports.Clinic_Id=?
         ",[Auth()->user()->id]);
+
         $dataCollection=collect($data);
+        
         $Success= $dataCollection->where("status","Success")->count();
         $fail= $dataCollection->where("status","failure")->count();
         return view("Admin_Provider.Report.deleviry.Report_delvary",[
@@ -54,7 +56,12 @@ class DeliveryReportsController extends Controller
         WHERE delivery_reports.Clinic_Id=? AND delivery_reports.Delivery_Id=?
 
         ",[Auth()->user()->id,$request->id_delivery]);
+       
+       
+       
         $dataCollection=collect($data);
+
+
         $Success= $dataCollection->where("status","Success")->count();
         $fail= $dataCollection->where("status","failure")->count();
         return view("Admin_Provider.Report.deleviry.Report_delvary",[

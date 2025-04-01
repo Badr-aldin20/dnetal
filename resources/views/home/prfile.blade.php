@@ -35,7 +35,7 @@
                     </script>
                 @endif
                 <form class="forms-sample" method="POST" action="{{ route('profile_up',[$data_user->id]) }}"
-                {{-- {{ route('Profile.update', [$data->id]) }} --}}
+
                  
                     enctype="multipart/form-data">
                     @csrf
@@ -98,8 +98,8 @@
                     <br>
 
                     <button type="submit" class="btn btn-primary mr-2">Update</button>
-                    <a href="{{route("profile")}}"
-                     class="btn btn-light">استعاده كلمه المرور</a>
+                    <a href="{{route("edit_password")}}"
+                     class="btn btn-light">تغير كلمه المرور</a>
                 </form>
             </div>
         </div>

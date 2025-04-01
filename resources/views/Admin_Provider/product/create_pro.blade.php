@@ -19,17 +19,21 @@
                         <label for="exampleInputName1">Name</label>
                         <input type="text" class="form-control" name="name" value="{{ old('name') }}" id="exampleInputName1" >
                     </div>
+                    
+                    <div class="mb-3">
+                        <label  class="form-label">catagories</label>
+                        <select name="catagories_Id" class="form-control">
+                        <option ></option
+                       @foreach($category as $categ)
+                       >
+                        <option value="{{$categ->id}}">{{$categ->mode}}</option>
+                        @endforeach
+                        </select >
+                      </div>
 
                     <div class="form-group">
                         <label for="exampleInputEmail3">Mode Type</label>
-                         <select name="modeType" id="" class="form-control">
-                            <option value="{{ old('modeType') }}"></option>
-                            <option value="مستلزمات">مستلزمات</option>
-                            <option value="ادوات جرحيه تستخدم لمره واحده">ادوات جراحيه تستخدم لمره واحده</option>
-                            <option value="معدات كبيره">معدات كبيره</option>
-                            <option value="اخرى">....اخرى</option>
-                         </select>
-                        {{-- <input type="text" name="modeType" value="{{ old('modeType') }}" class="form-control" id="exampleInputEmail3"> --}}
+                        <input type="text" name="modeType" value="{{ old('modeType') }}" class="form-control" id="exampleInputEmail3">
                     </div>
 
                     <div class="form-group">

@@ -8,4 +8,6 @@ use Illuminate\Database\Eloquent\Model;
 class delivery_reports extends Model
 {
     use HasFactory;
+    protected $guarded = [];
+
 }

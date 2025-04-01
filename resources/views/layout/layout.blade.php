@@ -106,17 +106,24 @@
                              href="{{route('showproduct_status')}}"
                                 >
                                 <i class="mdi mdi-email-outline"></i>
-                                <span class="count-symbol bg-danger"></span>
+                                <span class="count-symbol bg-danger">.</span>
                             </a>
                             
+                        </li>
+
+                        <li class="nav-item dropdown">
+                            <a class="nav-link count-indicator dropdown-toggle" 
+                            href="{{route('show_hero_status')}}"
+                            >
+                            <i class="mdi mdi-email-outline"></i>
+                            <span class="count-symbol bg-danger"></span>
+                          </a>
                         </li>
                     </li>
                     @endif
           
 
-                    
-
-                    
+                    @if (Auth()->user()->type == "Admin Provider")
                     <li class="nav-item dropdown">
                         <a class="nav-link count-indicator dropdown-toggle" 
                         href="{{route('showprodect_provider')}}"
@@ -125,6 +132,16 @@
                         <span class="count-symbol bg-danger"></span>
                     </a>
                 </li>
+
+                <li class="nav-item dropdown">
+                    <a class="nav-link count-indicator dropdown-toggle" 
+                    href="{{route('showprodect_provider')}}"
+                    >
+                    <i class="mdi mdi-email-outline"></i>
+                    <span class="count-symbol bg-danger"></span>
+                </a>
+            </li>
+                    @endif
                 
                 </ul>
                 <button class="navbar-toggler navbar-toggler-right d-lg-none align-self-center" type="button"
@@ -154,7 +171,7 @@
                             <span class="menu-title">Home</span>
                         </a>
                     </li>
-                    @if (Auth::user()->type != "Admin Provider")
+                    @if (Auth()->user()->type == "Master Admin")
                         <li class="nav-item nav-category">Users</li>
                         <li class="nav-item">
                             <a class="nav-link" href="{{route('supplier')}}">
@@ -170,6 +187,9 @@
                             </a>
                         </li>
 
+
+                        <li class="nav-item nav-category">balance</li>
+
                         <li class="nav-item">
                             <a class="nav-link" href="{{route('balance')}}">
                                 <span class="icon-bg"><i class="mdi mdi-cisco-webex"></i></span>
@@ -177,9 +197,25 @@
                             </a>
                         </li>
 
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{route('balanc_clint')}}">
+                            <span class="icon-bg"><i class="mdi mdi-account-multiple-outline"></i></span>
+                            <span class="menu-title">add_Balance</span>
+                        </a>
+                    </li> 
+
+                        
+             
 
 
                         <li class="nav-item nav-category">Product</li>
+
+                        <li class="nav-item">
+                            <a class="nav-link" href="{{route('index_categories')}}">
+                                <span class="icon-bg"><i class="mdi mdi-account-multiple-outline"></i></span>
+                                <span class="menu-title">categories </span>
+                            </a>
+                        </li>
 
                         <li class="nav-item">
                             <a class="nav-link" href="{{route('all_product_active')}}">
@@ -193,6 +229,21 @@
                                 <span class="menu-title">Report Product </span>
                             </a>
                         </li> 
+
+                        <li class="nav-item nav-category">process</li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="{{route('process')}}">
+                                <span class="icon-bg"><i class="mdi mdi-account-multiple-outline"></i></span>
+                                <span class="menu-title">process_all </span>
+                            </a>
+                        </li>
+
+                        <li class="nav-item">
+                            <a class="nav-link" href="{{route('process_search')}}">
+                                <span class="icon-bg"><i class="mdi mdi-account-multiple-outline"></i></span>
+                                <span class="menu-title">Report_process</span>
+                            </a>
+                        </li>
                         @endif
 
                         @if (Auth::user()->type == "Admin Provider")
@@ -212,6 +263,14 @@
                         <a class="nav-link" href="{{route('index_sales')}}">
                             <span class="icon-bg"><i class="mdi mdi-account-multiple-outline"></i></span>
                             <span class="menu-title">Purchases</span>
+                        </a>
+                    </li> 
+                    <li class="nav-item nav-category">heroe</li>
+                 
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{route('index_heroe')}}">
+                            <span class="icon-bg"><i class="mdi mdi-account-multiple-outline"></i></span>
+                            <span class="menu-title">heroe</span>
                         </a>
                     </li> 
                     <li class="nav-item nav-category">Deliveries</li>

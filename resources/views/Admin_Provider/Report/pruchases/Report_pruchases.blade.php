@@ -28,19 +28,23 @@
             <form action="{{route('Report_purchases_A')}}" method="POST" class="form">
                 @method('post')
                 @csrf
-                       {{-- <div>
-                    <select name="type_pro" id="" style="color: #000">
-                        <option  value="Unactive">المنتجات المرفوضه</option>
-                        <option value="wait">منتجات قيد الانتظار</option>
-                        <option value="null_val">منتجات خلصت</option>
-                        <option  value="Active">المنتجات المعروضه في التطبيق</option>
-                    </select>
-                </div> --}}
+            
+                    <div style="display: flex;gap: 10px;align-items: center;color: #000;font-weight: bold;">
+                        <label  class="form-label">product name</label>
+                        <select name="product_Id" class="form-control">
+                        <option></option
+                       @foreach($prod as $pro)
+                       >
+                        <option value="{{$pro->id}}">{{$pro->name}}</option>
+                        @endforeach
+                        </select >
+                      </div>
+                    
            
-                <div style="display: flex;gap: 10px;align-items: center;color: #000;font-weight: bold;">
+                {{-- <div style="display: flex;gap: 10px;align-items: center;color: #000;font-weight: bold;">
                     <label for="">Start Time</label>
                     <input type="text" name="name" value="{{ old('name') }}"  >
-                </div>
+                </div> --}}
 
                 <div style="display: flex;gap: 10px;align-items: center;color: #000;font-weight: bold;">
                     <label for="">Start Time</label>
@@ -56,13 +60,14 @@
 
             </form>
 
-            <form action=
-            {{-- "{{ route('Purchases.PDF') }}" --}}
+            <form action= "{{ route('Purchases_pdf_provider') }}"
              method="POST">
-                @csrf
-                <input type="date" name="Start_time" value="{{ $Start_time }}"
+                @csrf   
+                <input type="text" name="product_Id" value="{{$product_Id}}"
                     style="display: none">
-                <input type="date" name="End_time" value="{{ $End_time }}"
+                <input type="date" name="Start_time" value="{{$Start_time}}"
+                    style="display: none">
+                <input type="date" name="End_time" value="{{$End_time}}"
                     style="display: none">
 
                 <button type="submit" class="btn btn-google btn-icon-text"> PDF <i
@@ -87,7 +92,7 @@
                 @foreach ($data as $i)
                     <tr>
                         <td class="py-1">
-                            <img src="{{ asset('image_pro/'.$i->image) }}" />
+                            <img src="{{ asset($i->image) }}" />
                         </td>
                         <td>{{ $i->name }}</td>
                         <td>{{ $i->counter }}</td>
@@ -105,7 +110,7 @@
                     </td>
                     <td colspan="4">
                         <h4>
-                       
+                       {{$total_Balance}}
                         </h4>
                     </td>
                 </tr>

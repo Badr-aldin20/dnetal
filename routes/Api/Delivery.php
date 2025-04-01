@@ -36,7 +36,7 @@ Route::get("/Get-Verify-Code/{id}", function ($id) {
 // Change Status Code with Delivery زر من اجل ان تجعل الموصل حالته شغاله او مشغول او مغلق
 Route::post("/Change-Delivery-Status/{id}", function (Request $request, $id) {
     delaveries::where("id", $id)->update([
-        "status" => $request->status
+        "status" => $request->status,
     ]);
     return response()->json([
         "status" => "200",

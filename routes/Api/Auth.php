@@ -59,10 +59,18 @@ Route::post("/Login", function (Request $request) {
     if (!Hash::check($request->password, $user->password)) {
         return response()->json([
             "status" => "400",
-            "message" => "البريد الإلكتروني أو كلمة المرور غير صحيحة",
+            "message" =>"كلمة المرور غير صحيحة ",
         ]);
     }
+    // del
+//    if(!$user->active== true){
+//     return response()->json([
+//      "status" => "400",
+//      "message"=>"يرجى مراجعه الاداره للسماح لك بدخول"
+//     ]);
 
+//    }
+   //
     return response()->json([
         "status" => "200",
         "message" => "تم تسجيل الدخول بنجاح",
@@ -134,6 +142,7 @@ Route::post("/Register", function (Request $request) {
         'phone' => $request->phone,
         'Location' => $request->Location,
         'type' => "Clinic",
+        //'active'=>true
     ]);
 
 

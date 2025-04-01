@@ -21,17 +21,21 @@
                         <input type="text" class="form-control" name="name" value="{{ $sel->name }}" id="exampleInputName1" >
                     </div>
 
+                    <div class="mb-3">
+                        <label  class="form-label">catagory</label>
+                        <select name="catagory_id" class="form-control">
+                        <option value="{{$catagory->id}}">{{$catagory->mode}}</option>
+                        <option value=""></option>
+                       @foreach($catagory_all as $catagory_all)
+                       >
+                        <option value="{{$catagory_all->id}}">{{$catagory_all->mode}}</option>
+                        @endforeach
+                        </select >
+                      </div>
+
                     <div class="form-group">
                         <label for="exampleInputEmail3">Mode Type</label>
-                         <select name="modeType" id="" class="form-control">
-                            <option value="{{ $sel->modeType }}">{{ $sel->modeType }}</option>
-                            <option value=""></option>
-                            <option value="مستلزمات">مستلزمات</option>
-                            <option value="ادوات جرحيه تستخدم لمره واحده">ادوات جراحيه تستخدم لمره واحده</option>
-                            <option value="مستلزمات','معدات كبيره">معدات كبيره</option>
-                            <option value="اخرى">....اخرى</option>
-                         </select>
-                        {{-- <input type="text" name="modeType" value="{{ old('modeType') }}" class="form-control" id="exampleInputEmail3"> --}}
+                        <input type="text" name="modeType" value="{{$sel->modeType}}" class="form-control" id="exampleInputEmail3">
                     </div>
 
                     <div class="form-group">
@@ -69,8 +73,8 @@
 
                     <div class="form-group">
 
-                        <label for="exampleTextarea1">Description</label>
-                        <textarea class="form-control" id="exampleTextarea1" value="{{$sel->description  }}" name="description" rows="4"></textarea>
+                        <label for="exampleInputEmail3">Description</label>
+                        <input type="text" name="description" value="{{$sel->description}}" class="form-control" id="exampleInputEmail3">
                     </div>
 
                     <button type="submit" class="btn btn-primary mr-2">Submit</button>

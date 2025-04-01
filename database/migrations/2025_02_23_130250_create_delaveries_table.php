@@ -17,7 +17,8 @@ return new class extends Migration
             $table->string('email')->unique();
             $table->string('password');
             $table->foreignId('Manger_Id')->constrained('users');
-            $table->enum('status',["onlin","offline","Bus"]);
+          //  Online,OffLine,Busy
+            $table->enum('status',["Online","OffLine","Busy"]);
             $table->timestamps();
         });
     }

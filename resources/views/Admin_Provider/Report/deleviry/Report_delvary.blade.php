@@ -82,20 +82,32 @@
                     <th> Deliver </th>
                     <th> Name Clinic</th>
                     <th> Location </th>
-                    <th> status </th>
+                   
                     <th> data </th>
+                    <th> status </th>
                 </tr>
             </thead>
             <tbody>
                 @foreach ($data as $i)
-                    <tr
-                        style="background-color: {{ $i->status == 'Success' ? '#96dc96' : ($i->status == 'Underway' ? '#ffff96' : '#ff7777') }}">
+                    <tr>
                         <td>{{ $i->deliver_name }}</td>
                         <td>{{ $i->name }}</td>
                         <td>{{ $i->Location }}</td>
-                        <td>{{ $i->status }}</td>
-                        </td>
                         <td>{{ $i->created_at }}</td>
+                        {{-- <td>{{ $i->status }}</td> --}}
+
+                         <td>
+                       @switch($i->status)
+                           @case("Success")
+                           <label class="badge badge-danger">العمليه ناجحه</label>
+                               @break
+                           @case("failure")
+                           <label class="badge badge-success">العمليه فاشله </label>
+                               @break
+                           @default
+                           <label class="badge badge-warning">العمليه قيد الانتظار</label>
+                       @endswitch
+                    </td>
                     </tr>
                 @endforeach
 

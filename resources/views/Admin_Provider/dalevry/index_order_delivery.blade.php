@@ -89,12 +89,15 @@
             </tbody>
         </table>
     </div>
+
     <div id="div-add-hero">
         <div id="card-add-hero">
             <div class=" ">
                 <div class="card">
                     <div class="card-body">
                         <h3>Chose Delivery</h3>
+
+
                         @if ($errors->any())
                             <div class="alert alert-danger">
                                 <ul>
@@ -105,16 +108,15 @@
                             </div>
                         @endif
 
-                        <form class="forms-sample" method="POST" action="
-                        {{-- {{ route('product.Order.status') }} --}}
-                         ">
+                        <form class="forms-sample" method="POST" action="{{ route('edit_order_delivery') }}">
                             @csrf
                             @method('PUT')
                             <div class="form-group">
                                 <input type="hidden" name="id_Sales" id="inputProductId">
                                 <select name="id_delivery" class="form-control" id="exampleSelectGender">
-                                    @foreach ($deliveries as $i)
-                                        <option value="{{ $i->id }}">{{ $i->name }}</option>
+                                    <option value=""></option>
+                                    @foreach ($deliveries as $i_d)
+                                        <option value="{{ $i_d->id }}">{{ $i_d->name }}</option>
                                     @endforeach
                                 </select>
                             </div>

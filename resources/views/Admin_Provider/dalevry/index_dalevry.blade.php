@@ -11,27 +11,6 @@
 
 
 
-        @if (session()->has('edit'))
-        <div class="alert alert-success" id="alert">
-            {{ session('edit') }}
-        </div>
-        <script>
-            setTimeout(() => {
-                document.getElementById("alert").style.display = "none";
-            }, [2000]);
-        </script>
-    @endif
-        @if (session()->has('error'))
-            <div class="alert alert-danger" id="alert">
-                {{ session('error') }}
-            </div> 
-            <script>
-                setTimeout(() => {
-                    document.getElementById("alert").style.display = "none";
-                }, [2000]);
-            </script>
-         @endif
-
 
 
 
