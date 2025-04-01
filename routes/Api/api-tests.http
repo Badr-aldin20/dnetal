@@ -1,13 +1,13 @@
-GET http://192.168.41.3:8000/api/Get-All-Clinic
-Accept: application/json
 
+#داله جلب البينات جدول الاصناف
 
+# GET http://192.168.1.110:8000/api/Get-categories
+# Accept: application/json
 
+// داله لجلب المنتجات عند طريق الصنف
+# GET http://192.168.1.110:8000/api/Get-categories-prodect/4
+# Accept: application/json
 
-# POST http://192.168.41.3:8000/api/LoginDelivery
-# Content-Type: application/json
-
-# {
-#    "email":"badrhash123@gmail.com",
-#   "password":"12345678"
-# }
+# داله للبحث عن مزود عنط ريق اسمه
+# GET http://192.168.1.110:8000/api/Search_Manger/عما
+# Accept: application/json

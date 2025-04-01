@@ -81,7 +81,47 @@ class DelaveriesController extends Controller
 
 
 
+      public function delavery_C(){
+        $data = DB::select("
+        SELECT 
+             products.name,
+             products.image,
+             sales.id,
+             sales.counter,
+             sales.Order,
+             sales.StatusOrder,
+             sales.created_at,
+             products.price_sales,
+             products.price_buy,
+             delaveries.name as 'delivaryName',
+             ((products.price_sales - products.price_buy) * sales.counter) as Balance
+         
+         FROM 
+             sales
+         INNER JOIN 
+             products ON sales.product_Id = products.id
+         LEFT JOIN 
+             delaveries ON sales.deliver_id = delaveries.id
+         WHERE 
+             products.Manger_Id = ?
+            AND sales.Order = 0 OR sales.StatusOrder = 'C'
+         ORDER BY 
+             sales.id DESC;
+ 
+     ", [Auth()->user()->id]);
 
+
+ 
+         $deliveries = delaveries::where("status", "Online")
+             ->where("Manger_Id", Auth()->user()->id)
+             ->get();
+            // dd($deliveries);
+
+        return view("Admin_Provider.dalevry.delavery_C",[
+                "data" => $data,
+                "deliveries" => $deliveries,
+            ]);
+      }
 
 
       public function index_order_delivery(){
@@ -107,13 +147,12 @@ class DelaveriesController extends Controller
              delaveries ON sales.deliver_id = delaveries.id
          WHERE 
              products.Manger_Id = ?
-             AND sales.Order != 0
+             AND sales.Order != 0 AND sales.StatusOrder != 'C'
          ORDER BY 
              sales.id DESC;
  
      ", [Auth()->user()->id]);
 
-    //  delaveries::where("status","Online")->where("",Auth()->user()->id)->get();
  
          $deliveries = delaveries::where("status", "Online")
              ->where("Manger_Id", Auth()->user()->id)

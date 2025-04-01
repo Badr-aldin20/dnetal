@@ -281,6 +281,12 @@
                         </a>
                     </li> 
                     <li class="nav-item">
+                        <a class="nav-link" href="{{route('delavery_C')}}">
+                            <span class="icon-bg"><i class="mdi mdi-account-multiple-outline"></i></span>
+                            <span class="menu-title">complete delavery </span>
+                        </a>
+                    </li>
+                    <li class="nav-item">
                         <a class="nav-link" href="{{route('index_order_delivery')}}">
                             <span class="icon-bg"><i class="mdi mdi-account-multiple-outline"></i></span>
                             <span class="menu-title">Orders</span>

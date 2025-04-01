@@ -76,8 +76,14 @@ Route::get('edit_delivery/edit_delivery/{edit_delivery}',[DelaveriesController::
 Route::put('updata_delivery/updata_delivery/{updata_delivery}',[DelaveriesController::class,'updata_delivery'])->name(name:'updata_delivery');
 Route::delete('delete_delivery/{delete_delivery}',[DelaveriesController::class,'delete_delivery'])->name(name:'delete_delivery');
 
+
+
+Route::get('delavery_C',[DelaveriesController::class,'delavery_C'])->name(name:'delavery_C');
+
 Route::get('index_order_delivery',[DelaveriesController::class,'index_order_delivery'])->name(name:'index_order_delivery');
 Route::put('edit_order_delivery',[DelaveriesController::class,'edit_order_delivery'])->name(name:'edit_order_delivery');
+
+
 
 Route::get('Report_index_delivery',[DeliveryReportsController::class,'Report_index_delivery'])->name(name:'Report_index_delivery');
 Route::post('search_Report_delivery',[DeliveryReportsController::class,'search_Report_delivery'])->name(name:'search_Report_delivery');
