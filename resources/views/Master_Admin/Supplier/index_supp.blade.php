@@ -14,6 +14,18 @@
 @section('content')
     <div class="card-body">
         <h4 class="card-title">All Supplier Table</h4>
+       
+    @if (session()->has('recavery'))
+    <div class="alert alert-success" id="alert">
+        {{ session('recavery') }}
+    </div>
+    <script>
+        setTimeout(() => {
+            document.getElementById("alert").style.display = "none";
+        }, [5000]);
+    </script>
+@endif
+    
         @if (session()->has('sussess'))
         <div class="alert alert-success" id="alert">
             {{ session('sussess') }}
@@ -51,7 +63,7 @@
                 @foreach ($data as $i)
                     <tr>
                         <td class="py-1">
-                            <img src="{{asset('image_user/'.$i->image)}}" />
+                            <img src="{{asset($i->image)}}" />
                         </td>
                         <td>{{ $i->name }}</td>
                         <td>{{ $i->name_company }}</td>
@@ -70,6 +82,15 @@
 
                         </td>
 
+                        <td>
+                            <form id="resetForm{{$i->id}}" action="{{ route('Password_Recovery', $i->id) }}" method="POST">
+                                @csrf
+                                @method('PUT')
+                                <button type="button" onclick="confirmReset(this, {{$i->id}})" class="btn btn-primary mr-2">استعادة كلمة المرور</button>
+                            </form>  
+                        </td> 
+                        
+
                     </tr>
                 @endforeach
 
@@ -77,4 +98,24 @@
             </tbody>
         </table>
     </div>
+
+    <script>
+        function confirmReset(button, userId) {
+            Swal.fire({
+                title: "هل أنت متأكد؟",
+                text: "لن تتمكن من استخدام كلمة المرور القديمة، سيتم توليد كلمة مرور جديدة!",
+                icon: "warning",
+                showCancelButton: true,
+                confirmButtonColor: "#d33",
+                cancelButtonColor: "#3085d6",
+                confirmButtonText: "نعم، استعد!",
+                cancelButtonText: "إلغاء"
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    document.getElementById("resetForm" + userId).submit();
+                }
+            });
+        }
+    </script>
+    
 @endsection

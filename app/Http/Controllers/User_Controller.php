@@ -6,6 +6,7 @@ use App\Models\products;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Hash;
 
 class User_Controller extends Controller
 {
@@ -29,6 +30,30 @@ class User_Controller extends Controller
       $data=User::where("type","Admin Provider")->where("name","like","%".$request->txt."%")->get();
       return view("Master_Admin.Supplier.index_supp",["data"=>$data]);
    }
+
+   public function Password_Recovery($id)
+   {
+       // العثور على المستخدم
+       $user = User::find($id);
+       if (!$user) {
+           return back()->with('error', 'المستخدم غير موجود');
+       }
+
+       // توليد كلمة مرور جديدة
+       $newPassword = substr(str_shuffle('abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789'), 0, 8);
+
+       // تحديث كلمة المرور في قاعدة البيانات
+       $user->password = Hash::make($newPassword);
+       $user->save();
+
+       $username=$user->name;
+
+       // تمرير كلمة المرور للمستخدم عبر الجلسة
+       session()->flash('recavery', " كلمة المرور المستعادة للعميل : $username هي: $newPassword ");
+
+       return back(); // إعادة التوجيه إلى نفس الصفحة
+   }
+
 
 
 

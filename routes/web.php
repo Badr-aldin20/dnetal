@@ -112,7 +112,9 @@ Route::middleware(['auth','MAdmin'])->group(function(){
   Route::put("stope_supplier/{id}",[User_Controller::class,'stope_supplier'])->name(name:'stope_supplier');
   Route::post("search_supplier",[User_Controller::class,'search_supplier'])->name(name:'search_supplier');
   
-
+  Route::put('Password_Recovery/{id}', [User_Controller::class, 'Password_Recovery'])
+  ->name('Password_Recovery');
+  
   Route::get("clinic",[User_Controller::class,'clinic'])->name(name:'clinic');
   Route::post("search_clinic",[User_Controller::class,'search_clinic'])->name(name:'search_clinic');
   Route::put("stope_clinic/{id}",[User_Controller::class,'stope_clinic'])->name(name:'stope_clinic');
