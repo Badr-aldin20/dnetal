@@ -26,7 +26,23 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 
 // Home Api
 Route::get("/Get-Data-Home", function () {
-    $heroes = heroes::where('end_time', '>', Carbon::now())->get();
+    // $heroes = heroes::where('end_time', '>', Carbon::now())->get();
+    $heroes = DB::select("SELECT
+    heroes.id,
+    heroes.percentage,
+    heroes.Manger_Id,
+    heroes.product_Id,
+    heroes.status,
+    heroes.end_time,
+    heroes.description,
+    heroes.price_new,
+    products.image
+FROM
+    `heroes`
+INNER JOIN products ON heroes.product_Id = products.id
+WHERE
+    end_time > NOW() ");
+
     $data = User::where('active', "1")
         ->where('type', "Admin Provider")
         ->distinct()->inRandomOrder()->limit(4)->get();
@@ -50,24 +66,26 @@ Route::get("/Search/{txt}", function ($txt) {
     ]);
 });
 
-// Get Clinic Request 
+// Get Clinic Request وجهه الطلبات
 Route::get("/Get-Request-Clinic/{id}", function ($id) {
     $data = DB::select("
     SELECT
-        sales.Bill_Id,
-        SUM(sales.total_price) AS total_price,
-        MAX(sales.StatusOrder) AS StatusOrder,
-        bills.Clinic_Id,
-        MAX(bills.created_at) AS created_at
-    FROM
-        sales
-    INNER JOIN bills ON bills.id = sales.Bill_Id
-    WHERE
-        bills.Clinic_Id = ?
-    GROUP BY
-        sales.Bill_Id, bills.Clinic_Id
-    ORDER BY
-        bills.id DESC
+    sales.Bill_Id,
+    sales.id, 
+    SUM(sales.total_price) AS total_price,
+    MAX(sales.StatusOrder) AS StatusOrder,
+    bills.Clinic_Id,
+    MAX(bills.created_at) AS created_at
+FROM
+    sales
+INNER JOIN bills ON bills.id = sales.Bill_Id
+WHERE
+    bills.Clinic_Id = ?
+GROUP BY
+    sales.Bill_Id, bills.Clinic_Id, sales.id
+ORDER BY
+    bills.id DESC;
+
 ", [$id]);
 
 
@@ -78,7 +96,7 @@ Route::get("/Get-Request-Clinic/{id}", function ($id) {
     ]);
 });
 
-// Get data for Bill
+// Get data for Bill 
 Route::post("/Get-data-bill", function (Request $request) {
     $data = DB::select(
         "
@@ -87,9 +105,7 @@ SELECT
     products.image,
     products.price_buy,
     sales.counter,
-    (
-        sales.counter * products.price_buy
-    ) AS 'total_price'
+    ( sales.counter * products.price_buy) AS 'total_price'
 FROM
     sales
 INNER JOIN products ON products.id = sales.product_Id

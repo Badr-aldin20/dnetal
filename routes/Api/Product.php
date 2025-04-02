@@ -107,7 +107,7 @@ Route::get("/Search_Manger/{txt}", function ($txt) {
 //لاضافه رصيد واجهه تزويد حسابي
 
 
-Route::post("/balance/{id}", function (Request $request,$id) {
+Route::post("/balance/{id}", function (Request $request, $id) {
 
     // // Validation
     // $validator = Validator::make($request->all(), [
@@ -149,7 +149,7 @@ Route::post("/balance/{id}", function (Request $request,$id) {
     // Check Email is Already existing
     $user = User::where("id", $id)->first();
 
-    if ($user) {
+    if (!$user) {
         return response()->json([
             "status" => "400",
             "message" => "هذا المحساب غير موجود",
@@ -168,7 +168,7 @@ Route::post("/balance/{id}", function (Request $request,$id) {
 
     return response()->json([
         "status" => "200",
-        "message" => "تم التسجيل بنجاح",
+        "message" => "تم رفع الطلب بنجاح",
         "data" => $newUser
     ]);
 });
