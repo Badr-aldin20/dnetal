@@ -1,6 +1,5 @@
 
 #داله جلب البينات جدول الاصناف
-
 GET http://192.168.1.110:8000/api/Get-categories
 Accept: application/json
 
@@ -14,17 +13,32 @@ GET http://192.168.1.110:8000/api/Search_Manger/b
 
 ###
 GET http://192.168.1.110:8000/api/Get-Request-Clinic/2
-# Accept: application/json
-
-### داله رفع طلب اضافه رصيد
-POST http://192.168.1.110:8000/api/balance/5
-Content-Type: application/json
 Accept: application/json
 
-{
-    "totel_balance": 1500,
-    "description": "  إيداع جديد عن طريق حواله رقمها 1155501"
-}
+### داله رفع طلب اضافه رصيد
+# POST http://192.168.1.110:8000/api/balance/5
+# Content-Type: application/json
+# Accept: application/json
+
+# {
+#     "totel_balance": 1500,
+#     "description": "  إيداع جديد عن طريق حواله رقمها 1155501"
+# }
 
 # GET http://192.168.1.110:8000/api/get-data
 # Accept: application/json
+
+
+
+#داله لجلب العمليه المطلوب توصيله للموصل
+
+GET http://192.168.1.110:8000/api/Get-process-delaviery/1
+Accept: application/json
+
+
+
+
+
+
+
+

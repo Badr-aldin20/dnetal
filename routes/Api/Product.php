@@ -22,6 +22,18 @@ use Illuminate\Support\Facades\Route;
 Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();
 });
+#داله موجوده في السله مسبقا اضفت عليه شرط ان يتحقق من كلمه السر
+# لو تقدر تعمل من تحقق عند عمليه الشر عبر كلمه السر
+# هذا الاشرط الذي اضفته في الداله
+#      
+    #   if($request->password==$user->password){
+#         return response()->json([
+#             "status" => "404",
+#             "message" => "كلمة المرور غير صحيحة",
+#         ]);
+#     }
+
+
 
 // Get All products by Id User جلب منتجات عبر تحديد المزود
 Route::get("/Get-User-product/{id}", function ($id) {
@@ -170,5 +182,34 @@ Route::post("/balance/{id}", function (Request $request, $id) {
         "status" => "200",
         "message" => "تم رفع الطلب بنجاح",
         "data" => $newUser
+    ]);
+});
+
+Route::get("/Get-process-delaviery/{id}", function ($id) {
+    $data= DB::select("
+    SELECT
+    products.name,
+    users.name,
+    users.phone,
+    users.name_company,
+    users.Location,
+    Deliver_id
+FROM
+    `sales`
+    INNER JOIN products ON sales.product_Id = products.id
+    INNER JOIN users ON sales.Manger_Id = users.id
+    WHERE sales.Order =1 AND Deliver_id =? AND StatusOrder ='B' 
+    ",[$id]);
+    //dd($data);
+    if (!$data) {
+        return response()->json([
+            "status" => "400",
+            "message" => "لا يوجد منتجات من هذا الصنف",
+        ]);
+    }
+    return response()->json([
+        "status" => "200",
+        "message" => "Success",
+        "data" => $data,
     ]);
 });
