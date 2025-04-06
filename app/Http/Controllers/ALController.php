@@ -49,7 +49,7 @@ class ALController extends Controller
                 'file',
                 $file,
                 $request->file('image')->getClientOriginalName()
-            )->post('http://192.168.137.3:8000/predict/');
+            )->post('http://192.168.1.110:8000/predict/');
     
             if ($response->successful()) {
                 $result = $response->json();
