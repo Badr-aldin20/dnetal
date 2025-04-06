@@ -40,7 +40,7 @@
                     @csrf
                     @method('PUT')
                     <div class="form-group">
-                        <label for="exampleInputName1">Name</label>
+                        <label for="exampleInputName1">password_old</label>
                         <input type="password" class="form-control form-control-lg" name="password" value="{{ old('password') }}">
                     </div>
 
@@ -52,17 +52,20 @@
                     </div>
 
                     <div class="form-group">
-                        <label for="exampleInputName1">password_new_2</label>
+                        <label for="exampleInputName1">password_new2</label>
                         <input type="password" class="form-control form-control-lg" name="password_new2" value="{{ old('password_new2') }}">
 
                     </div>
 
                    
 
-                    <button type="submit" class="btn btn-primary mr-2">edit</button>
-                    <button class="btn btn-light">Cancel</button>
+                    <button type="submit" class="btn btn-primary mr-2">edit </button>
+                    <a href="/"> 
+                        <button class="btn btn-light">Cancel</button>
+                     </a>
 
                 </form>
+             
             </div>
         </div>
     @endsection

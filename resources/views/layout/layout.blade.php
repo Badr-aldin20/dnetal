@@ -265,6 +265,12 @@
                             <span class="menu-title">Purchases</span>
                         </a>
                     </li> 
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{route('index_ai')}}">
+                            <span class="icon-bg"><i class="mdi mdi-account-multiple-outline"></i></span>
+                            <span class="menu-title">فاتوره بالذكاء الاصطناعي</span>
+                        </a>
+                    </li>
                     <li class="nav-item nav-category">heroe</li>
                  
                     <li class="nav-item">
@@ -315,7 +321,7 @@
                     
                         <li class="nav-item nav-category">Others</li>
                         @endif
-
+                    
 
     <li class="nav-item sidebar-user-actions">
         <div class="sidebar-user-menu">

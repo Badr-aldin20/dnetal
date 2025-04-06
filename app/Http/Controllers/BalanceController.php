@@ -6,6 +6,8 @@ use App\Models\Balance;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Http;
+use Illuminate\Support\Facades\Log;
 
 class BalanceController extends Controller
 {
@@ -35,54 +37,136 @@ class BalanceController extends Controller
 
     }
      
-    public function store_balance(Request $request){
+    // public function store_balance(Request $request){
     
-        $clin_add_stoch=User::where("type","clinic")->where("id",$request->clinic_id)->first();
+    //     $clin_add_stoch=User::where("type","clinic")->where("id",$request->clinic_id)->first();
 
-        if($clin_add_stoch)
-        {
+    //     if($clin_add_stoch)
+    //     {
 
-            $request->validate([
-                "clinic_id"=>'required',
-                "totel_balance"=>'required|numeric|min:0',
-                "description"=>'required'
-                //clinic_id,status,
-             ]);
-             $totel_balance=$request->totel_balance;
-            $bala= Balance::create([
-                "clinic_id"=>$request->clinic_id,
-                "totel_balance"=>$totel_balance,
-                "description"=>$request->description,
-                "status"=>"Success"
-             ]);
+    //         $request->validate([
+    //             "clinic_id"=>'required',
+    //             "totel_balance"=>'required|numeric|min:0',
+    //             "description"=>'required'
+    //             //clinic_id,status,
+    //          ]);
+    //          $totel_balance=$request->totel_balance;
+    //         $bala= Balance::create([
+    //             "clinic_id"=>$request->clinic_id,
+    //             "totel_balance"=>$totel_balance,
+    //             "description"=>$request->description,
+    //             "status"=>"Success"
+    //          ]);
            
              
              
         
-             if(!$bala){
-                session()->flash("error","يوجد خطأ في الادخال");
-                return to_route('balance');
-            }
+    //          if(!$bala){
+    //             session()->flash("error","يوجد خطأ في الادخال");
+    //             return to_route('balance');
+    //         }
 
            
            
-            $clin_add_stoch->update(["stock"=>($clin_add_stoch->stock + $totel_balance )]);
+    //         $clin_add_stoch->update(["stock"=>($clin_add_stoch->stock + $totel_balance )]);
 
-            // User::update([
-            //     $user->Stock += $request->totel_balance
-            // ]);
-            session()->flash("success","تم الاضافه بنجاح ");
+    //         // User::update([
+    //         //     $user->Stock += $request->totel_balance
+    //         // ]);
+    //         session()->flash("success","تم الاضافه بنجاح ");
+    //         return to_route('balance');
+
+    //     }
+
+
+    //     session()->flash("error","لا يوجد تطبيق بنفس الاسم");
+    //     return to_route('balance');
+
+
+    // }
+
+
+
+    public function store_balance(Request $request)
+{
+    $clin_add_stoch = User::where("type", "clinic")->where("id", $request->clinic_id)->first();
+
+    if ($clin_add_stoch) {
+        $request->validate([
+            "clinic_id" => 'required',
+            "totel_balance" => 'required|numeric|min:0',
+            "description" => 'required'
+        ]);
+
+        $totel_balance = $request->totel_balance;
+
+        $bala = Balance::create([
+            "clinic_id" => $request->clinic_id,
+            "totel_balance" => $totel_balance,
+            "description" => $request->description,
+            "status" => "Success"
+        ]);
+
+        if (!$bala) {
+            session()->flash("error", "يوجد خطأ في الادخال");
             return to_route('balance');
-
         }
 
+        // ✅ تحديث الرصيد
+        $clin_add_stoch->update(["stock" => ($clin_add_stoch->stock + $totel_balance)]);
+         session()->flash("success", "تمت اضافة الرصيد للحساب بنجاح");
+        // ✅ إرسال رسالة واتساب
+        $apiKey = config('services.whatsapp.apikey');
+        $newBalance = $clin_add_stoch->stock;
+        $whatsappSent = $this->sendWhatsappMessage($clin_add_stoch->phone, $totel_balance, $newBalance, $apiKey);
 
-        session()->flash("error","لا يوجد تطبيق بنفس الاسم");
+        if ($whatsappSent) {
+            session()->flash("success", "تمت الإضافة بنجاح وتم إرسال رسالة واتساب ");
+        } else {
+            session()->flash("warning", "تمت الإضافة ولكن فشل إرسال رسالة واتساب ");
+        }
+
         return to_route('balance');
-
-
     }
 
+    session()->flash("error", "لا يوجد تطبيق بنفس الاسم");
+    return to_route('balance');
+}
+
+// ✅ دالة إرسال رسالة واتساب (كما هي من الكود الثاني)
+private function sendWhatsappMessage($phone, $amountAdded, $newBalance, $apiKey)
+{
+    try {
+        $fullPhone = "967" . ltrim($phone, "0");
+
+        $message = "مرحباً 👋\nتمت إضافة مبلغ 💰: $amountAdded ريال\nرصيدك الحالي: $newBalance ريال\nشكراً لك 🌟";
+
+        $response = Http::get("https://api.callmebot.com/whatsapp.php", [
+            'phone' => $fullPhone,
+            'text' => $message,
+            'apikey' => $apiKey
+        ]);
+
+        $body = $response->body();
+        Log::debug("WhatsApp API Response: $body");
+
+        if (str_contains($body, "Message queued")) {
+            Log::info("WhatsApp message sent successfully to $fullPhone");
+            return true;
+        } else {
+            Log::error("WhatsApp API failed: $body");
+        }
+    } catch (\Exception $e) {
+        Log::error("WhatsApp API Exception: " . $e->getMessage());
+    }
+
+    return false;
+}
+
+
+
+
+    
 
 
     public function edit_balance($id){

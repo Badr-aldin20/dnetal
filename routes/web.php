@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\ALController;
 use App\Http\Controllers\Auth_Controller;
 use App\Http\Controllers\BalanceController;
 use App\Http\Controllers\CategoriesController;
@@ -39,6 +40,17 @@ Route::middleware('guest')->group(function(){
 });
 
 Route::middleware(['auth','ProvideAdmin'])->group(function(){
+
+
+ Route::get('index_ai', [ALController::class, 'index_ai'])->name('index_ai');
+ Route::post('predict_image', [ALController::class, 'predict_image'])->name('predict_image');
+ Route::get('search_ai_product', [ALController::class, 'search_ai_product'])->name('search_ai_product');
+ Route::put('update_ai_cat/{id}', [ALController::class, 'update_ai_cat'])->name('update_ai_cat');
+ Route::delete('delete_ai_cat/{id}', [ALController::class, 'delete_ai_cat'])->name('delete_ai_cat');
+
+  Route::post('cart_ai_sales/{id}', [ALController::class, 'cart_ai_sales'])->name('cart_ai_sales');
+  Route::post('cart_ai_sales_all', [ALController::class, 'cart_ai_sales_all'])->name('cart_ai_sales_all');
+  Route::post('cart_ai_delete_all', [ALController::class, 'cart_ai_delete_all'])->name('cart_ai_delete_all');
 
   Route::get('showprodect_provider',[ProductsController::class,'showprodect_provider'])->name(name:'showprodect_provider');
  

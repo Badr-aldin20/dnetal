@@ -73,11 +73,7 @@
                             id="exampleInputName1" placeholder="name_company">
                     </div>
 
-                    <div class="form-group">
-                        <label for="exampleInputName1">password</label>
-                        <input type="text" value="{{$data_user->password}}" name="password" class="form-control"
-                            id="exampleInputName1" placeholder="password">
-                    </div>
+
 
                     <input type="file"  style="display: none" value="{{$data_user->image}}" name="image" id="image" class="file-upload-default">
 
