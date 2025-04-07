@@ -66,25 +66,45 @@ Route::get("/Search/{txt}", function ($txt) {
     ]);
 });
 
+
+//فاتورتين
+// SELECT
+// sales.Bill_Id,
+// sales.Manger_Id,
+// MAX(sales.created_at) AS created_at,
+// SUM(sales.counter * products.price_buy) AS total_price
+// FROM
+// sales
+// INNER JOIN products ON products.id = sales.product_Id
+// INNER JOIN bills ON bills.id = sales.Bill_Id
+// WHERE
+// bills.Clinic_Id = ?
+// GROUP BY
+// sales.Bill_Id, sales.Manger_Id
+// ORDER BY
+// sales.Bill_Id DESC; 
+
+
 // Get Clinic Request وجهه الطلبات
 Route::get("/Get-Request-Clinic/{id}", function ($id) {
+    
     $data = DB::select("
-    SELECT
-    sales.Bill_Id,
-    sales.id, 
-    SUM(sales.total_price) AS total_price,
-    MAX(sales.StatusOrder) AS StatusOrder,
-    bills.Clinic_Id,
-    MAX(bills.created_at) AS created_at
+  SELECT
+    
+    sales.Bill_Id ,
+    MAX(sales.created_at) AS created_at,
+    SUM(sales.counter * products.price_buy) AS total_price
+   
 FROM
     sales
+INNER JOIN products ON products.id = sales.product_Id
 INNER JOIN bills ON bills.id = sales.Bill_Id
 WHERE
     bills.Clinic_Id = ?
 GROUP BY
-    sales.Bill_Id, bills.Clinic_Id, sales.id
+    sales.Bill_Id 
 ORDER BY
-    bills.id DESC;
+    sales.Bill_Id DESC;  
 
 ", [$id]);
 

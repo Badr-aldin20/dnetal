@@ -92,7 +92,8 @@ Route::delete('delete_delivery/{delete_delivery}',[DelaveriesController::class,'
 
 Route::get('delavery_C',[DelaveriesController::class,'delavery_C'])->name(name:'delavery_C');
 
-Route::get('index_order_delivery',[DelaveriesController::class,'index_order_delivery'])->name(name:'index_order_delivery');
+//Route::get('Catgras',[DelaveriesController::class,'index_order_delivery'])->name(name:'index_order_delivery');
+Route::get('index_order_delivery',[DelaveriesController::class,'index_bill_delivery'])->name(name:'index_order_delivery');
 Route::put('edit_order_delivery',[DelaveriesController::class,'edit_order_delivery'])->name(name:'edit_order_delivery');
 
 

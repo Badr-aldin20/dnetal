@@ -121,44 +121,6 @@ Route::get("/Search_Manger/{txt}", function ($txt) {
 
 Route::post("/balance/{id}", function (Request $request, $id) {
 
-    // // Validation
-    // $validator = Validator::make($request->all(), [
-    //     "email" => "required|email|min:4email",
-    //     "password" => "required|min:8",
-    //     "clinic" => "required|string|min:4|max:35",
-    //     "name" => "required|string",
-    //     "phone" => "required",
-    //     "Location" => "required",
-    // ], [
-    //     "email.required" => "يرجى إدخال البريد الإلكتروني.",
-    //     "email.email" => "يجب أن يكون البريد الإلكتروني صالحًا.",
-    //     "email.min" => "يجب أن يحتوي البريد الإلكتروني على 4 أحرف على الأقل.",
-    //     "password.required" => "يرجى إدخال كلمة المرور.",
-    //     "password.string" => "يجب أن تكون كلمة المرور نصية.",
-    //     "password.min" => "يجب أن تكون كلمة المرور على الأقل 4 أحرف.",
-    //     "clinic.required" => "يرجى إدخال اسم العيادة.",
-    //     "clinic.string" => "يجب أن يكون اسم العيادة نصًا.",
-    //     "clinic.min" => "يجب أن يكون اسم العيادة على الأقل 4 أحرف.",
-    //     "clinic.max" => "يجب ألا يزيد اسم العيادة عن 15 حرفًا.",
-    //     "name.required" => "يرجى إدخال الاسم.",
-    //     "name.string" => "يجب أن يكون الاسم نصيًا.",
-    //     "phone.required" => "يرجى إدخال رقم الهاتف.",
-    //     "phone.string" => "يجب أن يكون رقم الهاتف نصيًا.",
-    //     "Location.required" => "يرجى إدخال العنوان.",
-    //     "Location.string" => "يجب أن يكون العنوان نصيًا.",
-    // ]);
-
-    // // // Check if validation fails
-    // if ($validator->fails()) {
-    //     return response()->json([
-    //         "status" => "400",
-    //         "message" => "هناك أخطاء في المدخلات",
-    //         "errors" => $validator->errors()
-    //     ], );
-    // }
-
-
-    // Check Email is Already existing
     $user = User::where("id", $id)->first();
 
     if (!$user) {
@@ -187,18 +149,72 @@ Route::post("/balance/{id}", function (Request $request, $id) {
 
 Route::get("/Get-process-delaviery/{id}", function ($id) {
     $data= DB::select("
-    SELECT
-    products.name,
-    users.name,
-    users.phone,
-    users.name_company,
-    users.Location,
-    Deliver_id
-FROM
-    `sales`
-    INNER JOIN products ON sales.product_Id = products.id
-    INNER JOIN users ON sales.Manger_Id = users.id
-    WHERE sales.Order =1 AND Deliver_id =? AND StatusOrder ='B' 
+ 
+        SELECT
+            MAX(sales.id) AS id_n,
+            sales.Bill_Id AS bill_sales,
+            MAX(sales.created_at) AS created_at,
+            SUM(sales.counter * products.price_buy) AS totalprice,
+            MIN(sales.Order) AS Order_sa,
+            MAX(sales.StatusOrder) AS StatusOrder,
+            MAX(users.name_company) AS company_clinc,
+            MAX(users.Location) AS Location_clinc,
+            MAX(delaveries.name) AS delivaryName
+
+        FROM sales
+        INNER JOIN products ON sales.product_Id = products.id
+        INNER JOIN bills ON sales.Bill_Id = bills.id
+        INNER JOIN users ON bills.Clinic_Id = users.id
+        LEFT JOIN delaveries ON sales.deliver_id = delaveries.id
+        INNER JOIN delivery_reports ON sales.Bill_Id = delivery_reports.bill_id
+
+        WHERE 
+           
+             sales.Order != 0 
+            AND sales.StatusOrder != 'C'
+            AND delivery_reports.Delivery_Id = ?
+
+        GROUP BY sales.Bill_Id
+        ORDER BY sales.Bill_Id DESC
+
+
+
+    ",[$id]);
+    //dd($data);
+    if (!$data) {
+        return response()->json([
+            "status" => "400",
+            "message" => "لا يوجد منتجات من هذا الصنف",
+        ]);
+    }
+    return response()->json([
+        "status" => "200",
+        "message" => "Success",
+        "data" => $data,
+    ]);
+});
+
+Route::get("/Get-process-delaviery-progect/{id}", function ($id) {
+    $data= DB::select("
+ 
+      SELECT
+    products.name AS product_name,
+    products.image,
+    products.price_buy,
+    products.price_sales,
+    sales.counter,
+    users.name_company AS clinic_name,
+    providers.name AS provider_name
+
+FROM sales
+INNER JOIN products ON sales.product_Id = products.id
+INNER JOIN bills ON sales.Bill_Id = bills.id
+INNER JOIN users ON bills.Clinic_Id = users.id
+INNER JOIN users AS providers ON products.Manger_Id = providers.id
+
+WHERE sales.Bill_Id = ? 
+
+
     ",[$id]);
     //dd($data);
     if (!$data) {

@@ -31,10 +31,13 @@ Accept: application/json
 
 
 #داله لجلب العمليه المطلوب توصيله للموصل
-
-GET http://192.168.1.110:8000/api/Get-process-delaviery/1
+داله الفاتوره المربوطه بالموصل
+GET http://192.168.1.110:8000/api/Get-process-delaviery/5
 Accept: application/json
 
+داله عرض منتجات الفاتوره
+GET http://192.168.1.110:8000/api/Get-process-delaviery-progect/10
+Accept: application/json
 
 
 

@@ -98,17 +98,22 @@ class DelaveriesController extends Controller
              sales.created_at,
              products.price_sales,
              products.price_buy,
-             delaveries.name as 'delivaryName',
-             ((products.price_sales - products.price_buy) * sales.counter) as Balance
-         
-         FROM 
-             sales
-         INNER JOIN 
-             products ON sales.product_Id = products.id
-         LEFT JOIN 
-             delaveries ON sales.deliver_id = delaveries.id
-         WHERE 
-             products.Manger_Id = ?
+       users.name_company as company_clinc ,
+    users.Location as Location_clinc,
+    delaveries.name AS 'delivaryName',
+    (
+        (
+            products.price_buy - products.price_sales
+        ) * sales.counter
+    ) AS Balance
+FROM
+    sales
+INNER JOIN products ON sales.product_Id = products.id
+INNER JOIN bills ON sales.Bill_Id = bills.id
+INNER JOIN users ON bills.Clinic_Id = users.id
+INNER JOIN delaveries ON sales.deliver_id = delaveries.id
+WHERE
+    products.Manger_Id = ?
             AND sales.Order = 0 OR sales.StatusOrder = 'C'
          ORDER BY 
              sales.id DESC;
@@ -127,35 +132,79 @@ class DelaveriesController extends Controller
             "deliveries" => $deliveries,
         ]);
     }
+    public function index_bill_delivery() {
+        $data = DB::select("
+  
+    SELECT
+        MAX(sales.id) AS id,
+        sales.Bill_Id  As bill_sales,
+        MAX(sales.created_at) AS created_at,
+        SUM(sales.counter * products.price_buy) AS totalprice,
+        MIN(sales.Order) AS Order_sa,
+        MAX(sales.StatusOrder) AS StatusOrder,
+        MAX(users.name_company) as company_clinc,
+        MAX(users.Location) as Location_clinc,
+        MAX(delaveries.name) AS delivaryName
+    FROM sales
+    INNER JOIN products ON sales.product_Id = products.id
+    INNER JOIN bills ON sales.Bill_Id = bills.id
+    INNER JOIN users ON bills.Clinic_Id = users.id
+    LEFT JOIN delaveries ON sales.deliver_id = delaveries.id
+    WHERE products.Manger_Id = ?
+      AND sales.Order != 0 
+      AND sales.StatusOrder != 'C'
+    GROUP BY sales.Bill_Id
+    ORDER BY sales.Bill_Id DESC
 
+    ;
+        ", [Auth()->user()->id]);
+        //dd($data);
+    
+        $deliveries = delaveries::where("status", "Online")
+            ->where("Manger_Id", Auth()->user()->id)
+            ->get();
+    
+        return view("Admin_Provider.dalevry.index_bill_delivery", [
+            "data" => $data,
+            "deliveries" => $deliveries,
+        ]);
+    }
+    
 
     public function index_order_delivery()
     {
+
         $data = DB::select("
-        SELECT 
-             products.name,
-             products.image,
-             sales.id,
-             sales.counter,
-             sales.Order,
-             sales.StatusOrder,
-             sales.created_at,
-             products.price_sales,
-             products.price_buy,
-             delaveries.name as 'delivaryName',
-             ((products.price_sales - products.price_buy) * sales.counter) as Balance
-         
-         FROM 
-             sales
-         INNER JOIN 
-             products ON sales.product_Id = products.id
-         LEFT JOIN 
-             delaveries ON sales.deliver_id = delaveries.id
-         WHERE 
-             products.Manger_Id = ?
-             AND sales.Order != 0 AND sales.StatusOrder != 'C'
-         ORDER BY 
-             sales.id DESC;
+      SELECT
+    products.name,
+    products.image,
+    sales.id,
+    sales.counter,
+    sales.Order,
+    sales.StatusOrder,
+    sales.created_at,
+    products.price_sales,
+    products.price_buy,
+    users.name_company as company_clinc ,
+    users.Location as Location_clinc,
+    delaveries.name AS 'delivaryName',
+    (
+        (
+            products.price_buy - products.price_sales
+        ) * sales.counter
+    ) AS Balance
+FROM
+    sales
+INNER JOIN products ON sales.product_Id = products.id
+INNER JOIN bills ON sales.Bill_Id = bills.id
+INNER JOIN users ON bills.Clinic_Id = users.id
+LEFT JOIN delaveries ON sales.deliver_id = delaveries.id
+WHERE
+    products.Manger_Id = ? AND sales.Order != 0 AND sales.StatusOrder != 'C'
+ORDER BY
+    sales.id
+DESC
+    ;
  
      ", [Auth()->user()->id]);
 

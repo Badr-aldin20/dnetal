@@ -1,4 +1,4 @@
-@extends('layout.Layout')
+ {{-- @extends('layout.Layout')
 
 @section('search')
 <form class="d-flex align-items-center h-100" action="{{ route('search_ai_product') }}" method="get">
@@ -160,11 +160,19 @@
         });
     }
 </script>
-@endsection
+@endsection 
+
+ --}}
 
 
 
-{{-- @extends('layout.Layout')
+
+
+
+
+
+ 
+ @extends('layout.Layout')
  
 
 @section('search')
@@ -374,4 +382,4 @@
         });
     }
 </script>
-@endsection --}}
+@endsection 

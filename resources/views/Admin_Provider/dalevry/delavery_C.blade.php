@@ -51,6 +51,8 @@
                     <th> Image </th>
                     <th> name </th>
                     <th> Counter </th>
+                    <th> name clinc  </th>
+                    <th> Location clinc </th>
                     <th> Delivery </th>
                     <th> Status </th>
                     <th> Date </th>
@@ -65,6 +67,8 @@
                         </td>
                         <td>{{ $i->name }}</td>
                         <td>{{ $i->counter }}</td>
+                        <td>{{ $i->company_clinc }}</td>
+                        <td>{{ $i->Location_clinc }}</td>
                         <td>{{ $i->delivaryName }}</td>
 
                         <td>
@@ -75,7 +79,7 @@
                                     
                                 @break
 
-                                @case('C')
+                                @case('c')
                                     تم عمليه التوصيل بنجاح
                                 @break
                             @endswitch
