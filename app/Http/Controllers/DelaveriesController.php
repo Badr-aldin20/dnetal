@@ -88,35 +88,29 @@ class DelaveriesController extends Controller
     public function delavery_C()
     {
         $data = DB::select("
-        SELECT 
-             products.name,
-             products.image,
-             sales.id,
-             sales.counter,
-             sales.Order,
-             sales.StatusOrder,
-             sales.created_at,
-             products.price_sales,
-             products.price_buy,
-       users.name_company as company_clinc ,
-    users.Location as Location_clinc,
-    delaveries.name AS 'delivaryName',
-    (
-        (
-            products.price_buy - products.price_sales
-        ) * sales.counter
-    ) AS Balance
-FROM
-    sales
-INNER JOIN products ON sales.product_Id = products.id
-INNER JOIN bills ON sales.Bill_Id = bills.id
-INNER JOIN users ON bills.Clinic_Id = users.id
-INNER JOIN delaveries ON sales.deliver_id = delaveries.id
-WHERE
-    products.Manger_Id = ?
-            AND sales.Order = 0 OR sales.StatusOrder = 'C'
-         ORDER BY 
-             sales.id DESC;
+       
+    SELECT
+        MAX(sales.id) AS id,
+        sales.Bill_Id  As bill_sales,
+        MAX(sales.created_at) AS created_at,
+        SUM(sales.counter * products.price_buy) AS totalprice,
+        MIN(sales.Order) AS Order_sa,
+        MAX(sales.StatusOrder) AS StatusOrder,
+        MAX(users.name_company) as company_clinc,
+        MAX(users.Location) as Location_clinc,
+        MAX(delaveries.name) AS delivaryName
+    FROM sales
+    INNER JOIN products ON sales.product_Id = products.id
+    INNER JOIN bills ON sales.Bill_Id = bills.id
+    INNER JOIN users ON bills.Clinic_Id = users.id
+    LEFT JOIN delaveries ON sales.deliver_id = delaveries.id
+    WHERE products.Manger_Id = ?
+      AND sales.Order != 0 
+      AND sales.StatusOrder = 'C'
+       OR sales.Order =0
+      
+    GROUP BY sales.Bill_Id
+    ORDER BY sales.Bill_Id DESC
  
      ", [Auth()->user()->id]);
 
@@ -171,42 +165,42 @@ WHERE
     }
     
 
-    public function index_order_delivery()
+    public function index_order_delivery($id)
     {
+            //AND sales.StatusOrder != 'C'
 
         $data = DB::select("
-      SELECT
-    products.name,
-    products.image,
-    sales.id,
-    sales.counter,
-    sales.Order,
-    sales.StatusOrder,
-    sales.created_at,
-    products.price_sales,
-    products.price_buy,
-    users.name_company as company_clinc ,
-    users.Location as Location_clinc,
-    delaveries.name AS 'delivaryName',
-    (
-        (
-            products.price_buy - products.price_sales
-        ) * sales.counter
-    ) AS Balance
-FROM
-    sales
-INNER JOIN products ON sales.product_Id = products.id
-INNER JOIN bills ON sales.Bill_Id = bills.id
-INNER JOIN users ON bills.Clinic_Id = users.id
-LEFT JOIN delaveries ON sales.deliver_id = delaveries.id
-WHERE
-    products.Manger_Id = ? AND sales.Order != 0 AND sales.StatusOrder != 'C'
-ORDER BY
-    sales.id
-DESC
-    ;
- 
-     ", [Auth()->user()->id]);
+        SELECT
+            products.name,
+            products.image,
+            sales.id,
+            sales.counter,
+            sales.Order,
+            sales.StatusOrder,
+            sales.created_at,
+            products.price_sales,
+            products.price_buy,
+            sales.Bill_Id AS bill_sales,
+            users.name_company as company_clinc,
+            users.Location as Location_clinc,
+            delaveries.name AS delivaryName,
+            (
+                (products.price_buy - products.price_sales) * sales.counter
+            ) AS Balance
+        FROM
+            sales
+        INNER JOIN products ON sales.product_Id = products.id
+        INNER JOIN bills ON sales.Bill_Id = bills.id
+        INNER JOIN users ON bills.Clinic_Id = users.id
+        LEFT JOIN delaveries ON sales.deliver_id = delaveries.id
+        WHERE
+            products.Manger_Id = ? AND sales.Order != 0 
+            AND sales.Bill_Id = ?
+        ORDER BY
+            sales.id DESC
+    ", [Auth()->user()->id,$id]);
+    // <-- هنا تمرر $id اللي جاي من الدالة
+    
 
 
         $deliveries = delaveries::where("status", "Online")
@@ -245,6 +239,6 @@ DESC
         ]);
 
         session()->flash("success", "تم التعديل بنجاح");
-        return to_route("index_order_delivery");
+        return to_route("index_bill_delivery");
     }
 }

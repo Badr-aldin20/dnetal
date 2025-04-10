@@ -41,7 +41,6 @@
                     <th> id </th>
                     <th> name </th>
                     <th>  email </th>
-                    <th>  password </th>
                     <th> status </th>
                     <th> Events </th>
                 </tr>
@@ -55,7 +54,6 @@
                         <td>{{$i->id}}</td>
                         <td>{{$i->name}}</td>
                         <td>{{$i->email}}</td>
-                        <td>{{$i->password}}</td>
                         <td>{{$i->status}}</td>
 
                         <td>

@@ -1,30 +1,7 @@
 @extends('layout/Layout')
 @section('content')
-    <div class="card-body">
-        <h4 class="card-title">All Orders</h4>
 
-        <div style="display: flex; color: #000;">
-            <div class="div-status" style="background-color: rgba(18, 177, 18, 0.445)"></div>
-            <h5>The Sale has been Completed</h5>
-        </div>
 
-        <div style="display: flex; color: #000;gab:5px">
-            <div class="div-status" style="background-color: rgba(255, 255, 0, 0.411)"></div>
-            <h5>Need Delivery</h5>
-        </div>
-
-        <div style="display: flex; color: #000;gab:5px">
-            <div class="div-status" style="background-color: rgba(255, 166, 0, 0.486)"></div>
-            <h5>Connecting</h5>
-        </div>
-
-        <style>
-            .div-status {
-                width: 20px;
-                height: 20px;
-                margin-right: 5px;
-            }
-        </style>
         @if (session()->has('success'))
             <div class="alert alert-success" id="alert">
                 {{ session('success') }}
@@ -48,9 +25,8 @@
         <table class="table table-striped">
             <thead>
                 <tr>
-                    <th> Image </th>
-                    <th> name </th>
-                    <th> Counter </th>
+                    <th> bill_sales </th>
+                    <th> TotAl </th>
                     <th> name clinc  </th>
                     <th> Location clinc </th>
                     <th> Delivery </th>
@@ -60,40 +36,40 @@
             </thead>
             <tbody>
                 @foreach ($data as $i)
-                    <tr @if ($i->StatusOrder == 'A') onclick="" @endif
+                    <tr @if ($i->StatusOrder == 'A') onclick="ShowHiddenDiv({{ $i->id }} )" @endif
                         style="background-color: {{ $i->StatusOrder == 'A' ? '#ffff96' : ($i->StatusOrder == 'B' ? '#ffd483' : '#96dc96') }};">
-                        <td class="py-1">
-                            <img src="{{ asset($i->image) }}" />
-                        </td>
-                        <td>{{ $i->name }}</td>
-                        <td>{{ $i->counter }}</td>
+                    
+                        <th> {{$i->bill_sales}} </th>
+                        <th> {{$i->totalprice}} </th>
                         <td>{{ $i->company_clinc }}</td>
                         <td>{{ $i->Location_clinc }}</td>
                         <td>{{ $i->delivaryName }}</td>
-
+                        
                         <td>
                             @switch($i->StatusOrder)
                                 @case('A')
-                                    لم يطلب  توصيل
+                                   NO Need Delivery
                                 @case('B')
                                     
                                 @break
 
                                 @case('c')
-                                    تم عمليه التوصيل بنجاح
+                                    Completed
                                 @break
                             @endswitch
                         </td>
                         <td>{{ $i->created_at }}</td>
+                        <td>
+                            <a href=" {{route('index_order_delivery',[$i->bill_sales])}}" class="btn btn-primary btn-rounded ">عرض المنتجات </a>
 
-
+                        </td>
                     </tr>
                 @endforeach
 
             </tbody>
         </table>
     </div>
-{{-- 
+
     <div id="div-add-hero">
         <div id="card-add-hero">
             <div class=" ">
@@ -182,5 +158,5 @@
         setTimeout(() => {
             location.reload();
         }, [10000]);
-    </script> --}}
+    </script>
 @endsection

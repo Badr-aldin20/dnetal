@@ -2,7 +2,10 @@
 
 use App\Models\Balance;
 use App\Models\categories;
+use App\Models\delaveries;
+use App\Models\delivery_reports;
 use App\Models\products;
+use App\Models\sales;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -171,7 +174,7 @@ Route::get("/Get-process-delaviery/{id}", function ($id) {
         WHERE 
            
              sales.Order != 0 
-            AND sales.StatusOrder != 'C'
+            AND sales.StatusOrder = 'B'
             AND delivery_reports.Delivery_Id = ?
 
         GROUP BY sales.Bill_Id
@@ -194,7 +197,8 @@ Route::get("/Get-process-delaviery/{id}", function ($id) {
     ]);
 });
 
-Route::get("/Get-process-delaviery-progect/{id}", function ($id) {
+Route::get("/Get-process-delaviery-prodecct/{id}", function ($id) {
+    
     $data= DB::select("
  
       SELECT
@@ -202,6 +206,8 @@ Route::get("/Get-process-delaviery-progect/{id}", function ($id) {
     products.image,
     products.price_buy,
     products.price_sales,
+    users.phone AS use_phone,
+    users.Location AS use_loction,
     sales.counter,
     users.name_company AS clinic_name,
     providers.name AS provider_name
@@ -229,3 +235,206 @@ WHERE sales.Bill_Id = ?
         "data" => $data,
     ]);
 });
+
+
+// SELECT
+//     sales.Bill_Id AS bill_id,
+//     MAX(sales.created_at) AS created_at,
+//     SUM(sales.counter * products.price_buy) AS totalprice,
+//     MAX(sales.StatusOrder) AS StatusOrder,
+//     MAX(users.name_company) AS clinic_name,
+//     MAX(users.Location) AS clinic_location,
+//     MAX(delaveries.name) AS delivery_name,
+//     delivery_reports.code
+
+// FROM sales
+// INNER JOIN products ON sales.product_Id = products.id
+// INNER JOIN bills ON sales.Bill_Id = bills.id
+// INNER JOIN users ON bills.Clinic_Id = users.id
+// LEFT JOIN delaveries ON sales.deliver_id = delaveries.id
+// INNER JOIN delivery_reports ON sales.Bill_Id = delivery_reports.bill_id
+
+// WHERE delivery_reports.Delivery_Id = ?
+//   AND sales.Bill_Id = ?
+//   AND sales.Order != 0
+//   AND sales.StatusOrder = 'B'
+  
+
+// GROUP BY sales.Bill_Id, delivery_reports.code
+// ORDER BY sales.Bill_Id DESC
+
+
+
+
+// Route::post("/code_bill/{id}", function (Request $request, $id) {
+
+//     $user = User::where("id", $id)->first();
+     
+//     if (!$user) {
+//         return response()->json([
+//             "status" => "400",
+//             "message" => "هذا المحساب غير موجود",
+//         ]);
+//     }
+
+//    $data=DB::select("
+//    SELECT
+//     sales.Bill_Id AS bill_id,
+//     delivery_reports.code as code_bill
+
+// FROM sales
+// INNER JOIN products ON sales.product_Id = products.id
+// INNER JOIN bills ON sales.Bill_Id = bills.id
+// INNER JOIN users ON bills.Clinic_Id = users.id
+// LEFT JOIN delaveries ON sales.deliver_id = delaveries.id
+// INNER JOIN delivery_reports ON sales.Bill_Id = delivery_reports.bill_id
+
+// WHERE delivery_reports.Delivery_Id = ?
+//   AND sales.Bill_Id = ?
+//   AND sales.Order != 0
+//   AND sales.StatusOrder = 'B'
+  
+
+// GROUP BY sales.Bill_Id, delivery_reports.code
+// ORDER BY sales.Bill_Id DESC
+//    ",[$id,$request->Bill_Id]);     
+       
+//    if ($request->Bill_Id != $data->code_bill) {
+//     return response()->json([
+//         "status" => "400",
+//         "message" => "الرمز الذي ادخلته لايتطابق مع رقم الفاتوره",
+//     ]);
+// }
+//     $selas=sales::where("Bill_Id",$request->Bill_Id)->get();
+    
+//     $selas->update([
+//         "StatusOrder"=>"C"
+//     ]);
+    
+//     return response()->json([
+//         "status" => "200",
+//         "message" => "تم اخذ الفاتوره بنجاح الطلب بنجاح",
+//         "data" => $data
+//     ]);
+// });
+
+
+
+Route::post("/code_bill/{id}", function (Request $request, $id) {
+    $user = delaveries::find($id);
+
+    if (!$user) {
+        return response()->json([
+            "status" => "400",
+            "message" => "هذا المحساب غير موجود",
+        ]);
+    }
+
+    $data = DB::select("
+        SELECT
+            sales.Bill_Id AS bill_id,
+            delivery_reports.code as code_bill
+        FROM sales
+        INNER JOIN products ON sales.product_Id = products.id
+        INNER JOIN bills ON sales.Bill_Id = bills.id
+        INNER JOIN users ON bills.Clinic_Id = users.id
+        LEFT JOIN delaveries ON sales.deliver_id = delaveries.id
+        INNER JOIN delivery_reports ON sales.Bill_Id = delivery_reports.bill_id
+        WHERE delivery_reports.Delivery_Id = ?
+          AND sales.Bill_Id = ?
+          AND sales.Order != 0
+          AND sales.StatusOrder = 'B'
+        GROUP BY sales.Bill_Id, delivery_reports.code
+        ORDER BY sales.Bill_Id DESC
+    ", [$id, $request->Bill_Id]);
+
+    if (count($data) === 0 || $request->code_bill != $data[0]->code_bill) {
+        return response()->json([
+            "status" => "400",
+            "message" => "الرمز الذي ادخلته لايتطابق مع رقم الفاتوره",
+        ]);
+    }
+
+    $selas = sales::where("Bill_Id", $request->Bill_Id)->get();
+    foreach ($selas as $sale) {
+        $sale->update([
+            "StatusOrder" => "C"
+        ]);
+    }
+    
+        $dep = delivery_reports::where("bill_id",$request->Bill_Id)->first();
+    
+    $dep->update([
+        "status"=>"Success"
+    ]);
+        $user->update([
+          "status"=>"Online"
+    ]);
+
+    return response()->json([
+        "status" => "200",
+        "message" => "تم اخذ الفاتوره بنجاح",
+        "data" => $data[0]
+    ]);
+});
+
+
+
+// Route::post("/code_bill/{id}", function (Request $request, $id) {
+//     $user = delaveries::find($id);
+
+//     if (!$user) {
+//         return response()->json([
+//             "status" => "400",
+//             "message" => "هذا المحساب غير موجود",
+//         ]);
+//     }
+
+//     $data = DB::select("
+//         SELECT
+//             sales.Bill_Id AS bill_id,
+//             delivery_reports.code as code_bill
+//         FROM sales
+//         INNER JOIN products ON sales.product_Id = products.id
+//         INNER JOIN bills ON sales.Bill_Id = bills.id
+//         INNER JOIN users ON bills.Clinic_Id = users.id
+//         LEFT JOIN delaveries ON sales.deliver_id = delaveries.id
+//         INNER JOIN delivery_reports ON sales.Bill_Id = delivery_reports.bill_id
+//         WHERE delivery_reports.Delivery_Id = ?
+//           AND sales.Bill_Id = ?
+//           AND sales.Order != 0
+//           AND sales.StatusOrder = 'B'
+//         GROUP BY sales.Bill_Id, delivery_reports.code
+//         ORDER BY sales.Bill_Id DESC
+//     ", [$id, $request->Bill_Id]);
+
+//     if (count($data) === 0 || $request->code_bill != $data[0]->code_bill) {
+//         return response()->json([
+//             "status" => "400",
+//             "message" => "الرمز الذي ادخلته لايتطابق مع رقم الفاتوره",
+//         ]);
+//     }
+
+//     $selas = sales::where("Bill_Id", $request->Bill_Id)->get();
+//     foreach ($selas as $sale) {
+//         $sale->update([
+//             "StatusOrder" => "C"
+//         ]);
+//     }
+
+//     $dep = delivery_reports::where("bill_id",$request->Bill_Id)->first();
+    
+//     $dep->update([
+//         "status"=>"Success"
+//     ]);
+//     $user->update([
+//           "Online"=>"Online"
+//     ]);
+     
+
+//     return response()->json([
+//         "status" => "200",
+//         "message" => "تم وصول الطلب للعميل بنجاح ",
+//         "data" => $data[0]
+//     ]);
+// });

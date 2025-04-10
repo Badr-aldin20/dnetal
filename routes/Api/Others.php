@@ -85,14 +85,33 @@ Route::get("/Search/{txt}", function ($txt) {
 // sales.Bill_Id DESC; 
 
 
+
+// SELECT
+    
+// sales.Bill_Id ,
+// MAX(sales.created_at) AS created_at,
+// SUM(sales.counter * products.price_buy) AS total_price
+
+// FROM
+// sales
+// INNER JOIN products ON products.id = sales.product_Id
+// INNER JOIN bills ON bills.id = sales.Bill_Id
+// WHERE
+// bills.Clinic_Id = ?
+// GROUP BY
+// sales.Bill_Id 
+// ORDER BY
+// sales.Bill_Id DESC;  
+
 // Get Clinic Request وجهه الطلبات
 Route::get("/Get-Request-Clinic/{id}", function ($id) {
     
     $data = DB::select("
-  SELECT
+     SELECT
     
     sales.Bill_Id ,
     MAX(sales.created_at) AS created_at,
+    MAX(sales.StatusOrder) AS StatusOrder,
     SUM(sales.counter * products.price_buy) AS total_price
    
 FROM

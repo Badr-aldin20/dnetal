@@ -172,7 +172,7 @@
 
 
  
- @extends('layout.Layout')
+ {{-- @extends('layout.Layout')
  
 
 @section('search')
@@ -382,4 +382,291 @@
         });
     }
 </script>
-@endsection 
+@endsection  --}}
+
+{{-- 
+@extends('layout.Layout')
+
+@section('search')
+<form class="d-flex align-items-center h-100" action="{{ route('search_ai_product') }}" method="get">
+    @csrf
+    <div class="input-group">
+        <div class="input-group-prepend bg-transparent">
+            <i class="input-group-text border-0 mdi mdi-magnify"></i>
+        </div>
+        <input type="text" value="{{ session('result.class') }}" class="form-control bg-transparent border-0" name="txt" placeholder="أدخل اسم المنتج">
+    </div>
+</form>
+@endsection
+
+@section('content')
+<div class="container" style="margin-top: 50px;">
+    <h2>تحميل أو التقاط صورة للتنبؤ</h2>
+
+    <form action="{{ route('predict_image') }}" method="POST" enctype="multipart/form-data" id="imageForm">
+        @csrf
+        <input type="file" name="image" accept="image/*" class="form-control mt-3" onchange="document.getElementById('imageForm').submit();">
+        <small class="text-muted">أو استخدم الكاميرا بالأسفل</small>
+    </form>
+
+    <div class="mt-4">
+        <video id="video" width="320" height="240" autoplay class="border rounded d-block mb-2"></video>
+        <canvas id="canvas" width="320" height="240" class="d-none"></canvas>
+        
+        <div class="btn-group mt-2">
+            <button id="startCamera" class="btn btn-success">تشغيل الكاميرا</button>
+            <button id="stopCamera" class="btn btn-secondary">إغلاق</button>
+            <button id="capture" class="btn btn-primary">التقاط</button>
+        </div>
+    </div>
+
+    <script>
+        let video = document.getElementById('video');
+        let canvas = document.getElementById('canvas');
+        let startButton = document.getElementById('startCamera');
+        let stopButton = document.getElementById('stopCamera');
+        let captureButton = document.getElementById('capture');
+        let stream;
+
+        startButton.addEventListener('click', async () => {
+            stream = await navigator.mediaDevices.getUserMedia({ video: true });
+            video.srcObject = stream;
+        });
+
+        stopButton.addEventListener('click', () => {
+            if (stream) {
+                stream.getTracks().forEach(track => track.stop());
+                video.srcObject = null;
+            }
+        });
+
+        captureButton.addEventListener('click', () => {
+            let context = canvas.getContext('2d');
+            canvas.classList.remove('d-none');
+            context.drawImage(video, 0, 0, canvas.width, canvas.height);
+
+            canvas.toBlob((blob) => {
+                let formData = new FormData();
+                formData.append('image', blob, 'captured.jpg');
+                formData.append('_token', '{{ csrf_token() }}');
+
+                fetch("{{ route('predict_image') }}", {
+                    method: "POST",
+                    body: formData
+                }).then(response => response.text())
+                  .then(data => {
+                    window.location.reload();
+                  }).catch(error => {
+                    alert("حدث خطأ أثناء إرسال الصورة.");
+                    console.error(error);
+                });
+            }, 'image/jpeg');
+        });
+    </script>
+
+    @if(session('result'))
+        <div class="alert alert-info mt-3">
+            <strong>التنبؤ:</strong> {{ session('result.class') }} |
+            <strong>نسبة الثقة:</strong> {{ session('result.confidence') * 100 }}%
+        </div>
+    @endif
+
+    @if (session()->has('success'))
+        <div class="alert alert-success" id="alert">
+            {{ session('success') }}
+        </div>
+        <script>
+            setTimeout(() => {
+                document.getElementById("alert").style.display = "none";
+            }, 2000);
+        </script>
+    @endif
+
+    @if (session()->has('error'))
+        <div class="alert alert-danger" id="alert">
+            {{ session('error') }}
+        </div> 
+        <script>
+            setTimeout(() => {
+                document.getElementById("alert").style.display = "none";
+            }, 2000);
+        </script>
+    @endif
+</div>
+@endsection--}}
+
+
+
+@extends('layout.Layout')
+
+@section('search')
+<form class="d-flex align-items-center h-100" action="{{ route('search_ai_product') }}" method="get">
+    @csrf
+    <div class="input-group">
+        <div class="input-group-prepend bg-transparent">
+            <i class="input-group-text border-0 mdi mdi-magnify"></i>
+        </div>
+        <input type="text" value="{{ session('result.class') }}" class="form-control bg-transparent border-0" name="txt" placeholder="أدخل اسم المنتج">
+    </div>
+</form>
+@endsection
+
+@section('content')
+<div class="container" style="margin-top: 50px;">
+    <h2>تحميل أو التقاط صورة للتنبؤ</h2>
+
+    {{-- رفع صورة من الجهاز --}}
+    <form action="{{ route('predict_image') }}" method="POST" enctype="multipart/form-data" id="imageForm">
+        @csrf
+        <input type="file" name="image" accept="image/*" class="form-control mt-3" onchange="document.getElementById('imageForm').submit();">
+        <small class="text-muted">أو استخدم الكاميرا بالأسفل</small>
+    </form>
+
+    {{-- الكاميرا --}}
+    <div class="mt-4">
+        <video id="video" width="320" height="240" autoplay class="border rounded d-block mb-2"></video>
+        <canvas id="canvas" width="320" height="240" class="d-none"></canvas>
+        
+        <div class="btn-group mt-2">
+            <button id="startCamera" class="btn btn-success">تشغيل الكاميرا</button>
+            <button id="stopCamera" class="btn btn-secondary">إغلاق</button>
+            <button id="capture" class="btn btn-primary">التقاط</button>
+        </div>
+    </div>
+
+    {{-- سكربت الكاميرا --}}
+    <script>
+        let video = document.getElementById('video');
+        let canvas = document.getElementById('canvas');
+        let startButton = document.getElementById('startCamera');
+        let stopButton = document.getElementById('stopCamera');
+        let captureButton = document.getElementById('capture');
+        let stream;
+
+        startButton.addEventListener('click', async () => {
+            stream = await navigator.mediaDevices.getUserMedia({ video: true });
+            video.srcObject = stream;
+        });
+
+        stopButton.addEventListener('click', () => {
+            if (stream) {
+                stream.getTracks().forEach(track => track.stop());
+                video.srcObject = null;
+            }
+        });
+
+        captureButton.addEventListener('click', () => {
+            let context = canvas.getContext('2d');
+            canvas.classList.remove('d-none');
+            context.drawImage(video, 0, 0, canvas.width, canvas.height);
+
+            canvas.toBlob((blob) => {
+                let formData = new FormData();
+                formData.append('image', blob, 'captured.jpg');
+                formData.append('_token', '{{ csrf_token() }}');
+
+                fetch("{{ route('predict_image') }}", {
+                    method: "POST",
+                    body: formData
+                }).then(response => window.location.reload())
+                .catch(error => {
+                    alert("حدث خطأ أثناء إرسال الصورة.");
+                    console.error(error);
+                });
+            }, 'image/jpeg');
+        });
+    </script>
+
+    {{-- نتيجة التنبؤ --}}
+    @if(session('result'))
+        <div class="alert alert-info mt-3">
+            <strong>التنبؤ:</strong> {{ session('result.class') }} |
+            <strong>نسبة الثقة:</strong> {{ session('result.confidence') * 100 }}%
+        </div>
+    @endif
+
+    {{-- رسائل النجاح أو الخطأ --}}
+    @if (session()->has('success'))
+        <div class="alert alert-success" id="alert">
+            {{ session('success') }}
+        </div>
+        <script>
+            setTimeout(() => {
+                document.getElementById("alert").style.display = "none";
+            }, 2000);
+        </script>
+    @endif
+
+    @if (session()->has('error'))
+        <div class="alert alert-danger" id="alert">
+            {{ session('error') }}
+        </div> 
+        <script>
+            setTimeout(() => {
+                document.getElementById("alert").style.display = "none";
+            }, 2000);
+        </script>
+    @endif
+
+    {{-- عرض سلة المشتريات --}}
+    <div class="mt-5">
+        <h3>سلة المشتريات</h3>
+        @if(count($basket) > 0)
+        <table class="table table-bordered mt-3 text-center">
+            <thead class="table-light">
+                <tr>
+                    <th>المنتج</th>
+                    <th>الصورة</th>
+                    <th>العدد</th>
+                    <th>السعر</th>
+                    <th>الإجمالي</th>
+                    <th>التحكم</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach($basket as $item)
+                <tr>
+                    <td>{{ $item->name_prodect }}</td>
+                    <td><img src="{{ asset('storage/' . $item->image) }}" width="50"></td>
+                    <td>
+                        <form action="{{ route('update_ai_cat', $item->as_id) }}" method="post">
+                            @csrf
+                            @method('PUT')
+                            <input type="number" name="counter" value="{{ $item->number_prodect }}" class="form-control" min="1">
+                            <button class="btn btn-sm btn-primary mt-1">تحديث</button>
+                        </form>
+                    </td>
+                    <td>{{ $item->price_buy }} ريال</td>
+                    <td>{{ $item->total_price }} ريال</td>
+                    <td>
+                        <form action="{{ route('delete_ai_cat', $item->as_id) }}" method="post" onsubmit="return confirm('هل أنت متأكد من الحذف؟');">
+                            @csrf
+                            @method('DELETE')
+                            <button class="btn btn-sm btn-danger">حذف</button>
+                        </form>
+                    </td>
+                </tr>
+                @endforeach
+            </tbody>
+        </table>
+
+        <div class="d-flex justify-content-between mt-3">
+            <strong>الإجمالي الكلي: {{ $total_Balance }} ريال</strong>
+            <div>
+                <form action="{{ route('cart_ai_sales_all') }}" method="post" class="d-inline">
+                    @csrf
+                    <button class="btn btn-success">بيع الكل</button>
+                </form>
+                <form action="{{ route('cart_ai_delete_all') }}" method="post" class="d-inline">
+                    @csrf
+                    <button class="btn btn-danger">حذف الكل</button>
+                </form>
+            </div>
+        </div>
+
+        @else
+            <p class="text-muted mt-3">لا توجد منتجات في السلة.</p>
+        @endif
+    </div>
+</div>
+@endsection

@@ -15,17 +15,33 @@ class DeliveryReportsController extends Controller
      
         $delivery=delaveries::where("Manger_Id",Auth()->user()->id)->get();
         $data=DB::select("
-        SELECT 
-        delaveries.name as deliver_name,
-        users.name,
-        users.Location,
-        delivery_reports.status,
-        delivery_reports.created_at
-        FROM delivery_reports 
-        INNER JOIN users ON  delivery_reports.Clinic_Id=users.id 
-        INNER JOIN delaveries ON delivery_reports.Delivery_Id =delaveries.id
-     
-     WHERE delivery_reports.Clinic_Id=?
+ SELECT 
+    delaveries.name AS deliver_name,
+    users.name AS clinic_name,
+    users.Location,
+    delivery_reports.bill_id,
+    delivery_reports.code,
+    delivery_reports.status,
+    delivery_reports.created_at,
+    MAX(bills.created_at) AS bill_date,
+    SUM(sales.counter * products.price_buy) AS total_amount
+FROM delivery_reports 
+INNER JOIN users ON delivery_reports.Clinic_Id = users.id 
+INNER JOIN delaveries ON delivery_reports.Delivery_Id = delaveries.id
+INNER JOIN bills ON delivery_reports.bill_id = bills.id
+INNER JOIN sales ON sales.Bill_Id = bills.id
+INNER JOIN products ON sales.product_Id = products.id
+WHERE   sales.Manger_Id = ?
+GROUP BY 
+    delivery_reports.bill_id,
+    delivery_reports.code,
+    delaveries.name,
+    users.name,
+    users.Location,
+    delivery_reports.status,
+    delivery_reports.created_at
+ORDER BY delivery_reports.created_at DESC
+
         ",[Auth()->user()->id]);
 
         $dataCollection=collect($data);
@@ -44,17 +60,32 @@ class DeliveryReportsController extends Controller
 
         $delivery=delaveries::where("Manger_Id",Auth()->user()->id)->get();
         $data=DB::select("
-        SELECT 
-        delaveries.name as deliver_name,
-        users.name,
-        users.Location,
-        delivery_reports.status,
-        delivery_reports.created_at
-        FROM delivery_reports 
-        INNER JOIN users ON  delivery_reports.Clinic_Id=users.id 
-        INNER JOIN delaveries ON delivery_reports.Delivery_Id =delaveries.id
-        WHERE delivery_reports.Clinic_Id=? AND delivery_reports.Delivery_Id=?
-
+ SELECT 
+    delaveries.name AS deliver_name,
+    users.name AS clinic_name,
+    users.Location,
+    delivery_reports.bill_id,
+    delivery_reports.code,
+    delivery_reports.status,
+    delivery_reports.created_at,
+    MAX(bills.created_at) AS bill_date,
+    SUM(sales.counter * products.price_buy) AS total_amount
+FROM delivery_reports 
+INNER JOIN users ON delivery_reports.Clinic_Id = users.id 
+INNER JOIN delaveries ON delivery_reports.Delivery_Id = delaveries.id
+INNER JOIN bills ON delivery_reports.bill_id = bills.id
+INNER JOIN sales ON sales.Bill_Id = bills.id
+INNER JOIN products ON sales.product_Id = products.id
+WHERE   sales.Manger_Id =? AND delivery_reports.Delivery_Id=?
+GROUP BY 
+    delivery_reports.bill_id,
+    delivery_reports.code,
+    delaveries.name,
+    users.name,
+    users.Location,
+    delivery_reports.status,
+    delivery_reports.created_at
+ORDER BY delivery_reports.created_at DESC
         ",[Auth()->user()->id,$request->id_delivery]);
        
        

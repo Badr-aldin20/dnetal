@@ -25,22 +25,30 @@ Accept: application/json
 #     "description": "  إيداع جديد عن طريق حواله رقمها 1155501"
 # }
 
-# GET http://192.168.1.110:8000/api/get-data
+# GET http://192.168.35.3:8000/api/Get-Request-Clinic/9
 # Accept: application/json
 
 
 
 #داله لجلب العمليه المطلوب توصيله للموصل
-داله الفاتوره المربوطه بالموصل
-GET http://192.168.1.110:8000/api/Get-process-delaviery/5
+# داله الفاتوره المربوطه بالموصل
+# GET http://192.168.1.110:8000/api/Get-process-delaviery/5
+# Accept: application/json
+
+# داله عرض منتجات الفاتوره
+# GET http://192.168.1.110:8000/api/Get-process-delaviery-progect/10
+# Accept: application/json
+
+
+
+POST http://192.168.192.3:8000/api/code_bill/1
+Content-Type: application/json
 Accept: application/json
 
-داله عرض منتجات الفاتوره
-GET http://192.168.1.110:8000/api/Get-process-delaviery-progect/10
-Accept: application/json
-
-
-
+{
+    "Bill_Id": 24,
+    "code_bill": 3623,
+}
 
 
 

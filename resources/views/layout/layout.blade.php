@@ -293,7 +293,7 @@
                         </a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="{{route('index_order_delivery')}}">
+                        <a class="nav-link" href="{{route('index_bill_delivery')}}">
                             <span class="icon-bg"><i class="mdi mdi-account-multiple-outline"></i></span>
                             <span class="menu-title">Orders</span>
                         </a>

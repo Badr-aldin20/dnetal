@@ -68,21 +68,15 @@
 
         </form>
 
-        {{-- <form action="{{ route('Delivery.PDF') }}" method="POST">
-            @csrf
-            <input type="hidden" value="" name="id_delivery">
-            <button type="submit" class="btn btn-google btn-icon-text"> PDF <i
-                    class="mdi mdi-printer btn-icon-append"></i>
-            </button>
-        </form> --}}
       </div>
         <table class="table table-striped">
             <thead>
                 <tr>
+                    <th> رقم الفاتوره </th>
                     <th> Deliver </th>
                     <th> Name Clinic</th>
                     <th> Location </th>
-                   
+                    <th> قيمه الفاتوره </th>
                     <th> data </th>
                     <th> status </th>
                 </tr>
@@ -90,23 +84,30 @@
             <tbody>
                 @foreach ($data as $i)
                     <tr>
+                        <td>{{ $i->bill_id }}</td>
                         <td>{{ $i->deliver_name }}</td>
-                        <td>{{ $i->name }}</td>
+                        <td>{{ $i->clinic_name }}</td>
                         <td>{{ $i->Location }}</td>
+                        <td>{{ $i->total_amount }}</td>
                         <td>{{ $i->created_at }}</td>
                         {{-- <td>{{ $i->status }}</td> --}}
 
                          <td>
                        @switch($i->status)
                            @case("Success")
-                           <label class="badge badge-danger">العمليه ناجحه</label>
+                           <label class="badge badge-success">العمليه ناجحه</label>
                                @break
                            @case("failure")
-                           <label class="badge badge-success">العمليه فاشله </label>
+                           <label class="badge badge-danger">العمليه فاشله </label>
                                @break
                            @default
-                           <label class="badge badge-warning">العمليه قيد الانتظار</label>
+                           <label class="badge badge-warning"> قيد الانتظار</label>
                        @endswitch
+                    </td>
+
+                    <td>
+                        <a href=" {{route('index_order_delivery',[$i->bill_id])}}" class="btn btn-primary btn-rounded ">عرض المنتجات </a>
+
                     </td>
                     </tr>
                 @endforeach

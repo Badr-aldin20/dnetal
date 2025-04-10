@@ -48,7 +48,7 @@
             <table class="table table-striped">
                 <thead>
                     <tr>
-                    
+                        <th> bill_sales </th>
                         <th> TotAl </th>
                         <th> name clinc  </th>
                         <th> Location clinc </th>
@@ -62,8 +62,8 @@
                         <tr @if ($i->StatusOrder == 'A') onclick="ShowHiddenDiv({{ $i->id }} )" @endif
                             style="background-color: {{ $i->StatusOrder == 'A' ? '#ffff96' : ($i->StatusOrder == 'B' ? '#ffd483' : '#96dc96') }};">
                         
-                            
-                            <th> Counter </th>
+                            <th> {{$i->bill_sales}} </th>
+                            <th> {{$i->totalprice}} </th>
                             <td>{{ $i->company_clinc }}</td>
                             <td>{{ $i->Location_clinc }}</td>
                             <td>{{ $i->delivaryName }}</td>
@@ -82,8 +82,10 @@
                                 @endswitch
                             </td>
                             <td>{{ $i->created_at }}</td>
-
-
+                            <td>
+                                <a href=" {{route('index_order_delivery',[$i->bill_sales])}}" class="btn btn-primary btn-rounded ">عرض المنتجات </a>
+    
+                            </td>
                         </tr>
                     @endforeach
 
